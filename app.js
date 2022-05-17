@@ -1,9 +1,11 @@
-const { getTopics, getInvalidPath } = require(`./controllers/controllers.js`);
+const { getTopics, getArticleById, getInvalidPath } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
 
 app.get('/api/topics', getTopics);
+
+app.get(`/api/articles/:article_id`, getArticleById);
 
 app.get(`/*`, getInvalidPath);
 
