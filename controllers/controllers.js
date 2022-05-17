@@ -13,7 +13,8 @@ exports.getArticleById = (req, res) => {
     extractArticleById(article_id)
     .then(article => {
         res.status(200).send(article);
-    });
+    })
+    .catch(error => console.log(error));
 };
 
 exports.getInvalidPath = (req, res, next) => {

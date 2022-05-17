@@ -32,10 +32,10 @@ describe(`GET /api/topics`, () => {
     })
 });
 
-describe('GET /api/articles/:article_id', () => {
+describe(`GET /api/articles/:article_id`, () => {
     test(`status:200, responds with an article object`, () => {
         return request(app)
-        .get(`/api/articles/7`)
+        .get(`/api/articles/12`)
         .expect(200)
         .then(({body}) => {
             const article = body;
@@ -51,9 +51,15 @@ describe('GET /api/articles/:article_id', () => {
             }));
         });
     });
+    // test(`status: 404. responds with an error message when passed an invalid parameteric endpoint`, () => {
+    //     return request(app)
+    //     .get(`api/articles/bananas`)
+    //     .expect(404)
+    //     .then
+    // });
 });
 
-describe('GET /*`', () => {
+describe(`GET /*`, () => {
     test('status:404, responds with an error message when passed a route that does not exist', () => {
         return request(app)
           .get('/api/tropics')
