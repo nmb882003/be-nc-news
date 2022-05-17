@@ -1,22 +1,19 @@
 const { extractTopics, extractArticleById } = require(`../models/models.js`);
 
-exports.getTopics = (req, res) => {
+exports.getTopics = (req, res, next) => {
     extractTopics()
-    .then(topicsArray => {
-        res.status(200).send(topicsArray);
-    })
-    .catch(error => console.log("Oh no!", error));
+    .then(topicsArray => res.status(200).send({topicsArray}))
 };
 
-exports.getArticleById = (req, res) => {
+exports.getArticleById = (req, res, next) => {
     const {article_id} = req.params;
     extractArticleById(article_id)
     .then(article => {
-        res.status(200).send(article);
+        return res.status(200).send({article});
     })
-    .catch(error => console.log(error));
+    .catch(next);
 };
 
 exports.getInvalidPath = (req, res, next) => {
-    res.status(404).send({msg: "Route does not exist"});
+    res.status(404).send({ msg: "Route does not exist" });
 };
