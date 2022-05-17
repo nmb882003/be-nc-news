@@ -5,13 +5,13 @@ const db = require('../db/connection.js');
 
 const testData = require('../db/data/test-data');
 
-beforeEach(() => {
-    return seed(testData);
-})
-
 afterAll(() => {
     return db.end()
 });
+
+beforeEach(() => {
+    return seed(testData);
+})
 
 describe(`GET /api/topics`, () => {
     test(`Status:200, responds with an array of 'topic' objects, each with 'slug' and 'description' properties`, () => {
