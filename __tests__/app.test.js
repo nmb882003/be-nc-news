@@ -30,6 +30,9 @@ describe(`GET /api/topics`, () => {
             })
         });
     })
+});
+
+describe('GET /*`', () => {
     test('status:404, responds with an error message when passed a route that does not exist', () => {
         return request(app)
           .get('/api/tropics')
@@ -37,5 +40,5 @@ describe(`GET /api/topics`, () => {
           .then(({ body }) => {
             expect(body.msg).toBe('Route does not exist');
           });
-      })
+    });
 });
