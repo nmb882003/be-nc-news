@@ -18,12 +18,13 @@ exports.getInvalidPath = (req, res, next) => {
     res.status(404).send({ msg: "Route does not exist" });
 };
 
-exports.patchArticleVotesById = (req, res) => {
+exports.patchArticleVotesById = (req, res, next) => {
     const {article_id} = req.params;
     const {body} = req;
     updateArticleVotesById(article_id, body)
     .then(article => {
         console.log(article);
         return res.status(201).send({article});
-    });
+    })
+    .catch(next);
 };

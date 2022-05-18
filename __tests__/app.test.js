@@ -70,19 +70,58 @@ describe(`GET /api/articles/:article_id`, () => {
     });
 });
 
-describe.only(`PATCH /api/articles/:article_id`, () => {
-    test(`status: 201, responds with an updated article object when passed an object with a valid 'inc_votes' property`, () => {
-        const validBody = { inc_votes: 10 };
-        const expectedVotes = 110;
+describe(`PATCH /api/articles/:article_id`, () => {
+    const validBody = { inc_votes: 10 };
+    const invalidBody1 = { inc_bananas: 10 };
+    const invalidBody2 = { inc_votes: "ten" };
 
+    test(`status: 201, responds with an updated article object when passed an object with a valid 'inc_votes' property`, () => {    
         return request(app)
         .patch(`/api/articles/1`)
         .send(validBody)
         .expect(201)
         .then(({body}) => {
             const {article} = body;
-            expect(article.votes).toBe(expectedVotes);
+            expect(article.votes).toBe(110);
         });
+    });
+    test(`status: 400, responds with an error message when passed an invalid parameteric endpoint`, () => {
+        return request(app)
+            .patch(`/api/articles/bananas`)
+            .send(validBody)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Invalid request');
+            });
+    });
+    test(`status: 404, responds with an error message when passed an article_id that doesn't exist`, () => {
+        return request(app)
+        .patch(`/api/articles/333`)
+        .send(validBody)
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe('Entry not found');
+        })
+    });
+    test(`status: 400, responds with an error message when passed an object without a 'inc_votes' property`, () => {
+        return request(app)
+        .patch(`/api/articles/1`)
+        .send(invalidBody1)
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe('Invalid request');
+        })
+
+    });
+    test(`status: 400, responds with an error message when passed an object where the 'inc_votes' property is not a number`, () => {
+        return request(app)
+        .patch(`/api/articles/1`)
+        .send(invalidBody2)
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe('Invalid request');
+        })
+
     });
 });
 
