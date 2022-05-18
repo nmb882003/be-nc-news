@@ -14,6 +14,11 @@ exports.getArticleById = (req, res, next) => {
     .catch(next);
 };
 
+exports.getUsers = () => {
+    extractUsers();
+
+};
+
 exports.getInvalidPath = (req, res, next) => {
     res.status(404).send({ msg: "Route does not exist" });
 };

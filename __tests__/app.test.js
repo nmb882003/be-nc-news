@@ -134,6 +134,25 @@ describe(`PATCH /api/articles/:article_id`, () => {
     });
 });
 
+describe(`GET /api/users`, () => {
+    test(`status: 200, responds with an array of objects with a 'username' property`, () => {
+        return request(app)
+        .get(`/api/users`)
+        .expect(200)
+        .then(({body}) => {
+            const {usersArray} = body;
+            expect(Array.isArray(usersArray)).toBe(true);
+            expect(usersArray).toHaveLength(4);
+
+            usersArray.forEach(user => {
+                expect(user.hasOwnProperty("username")).toBe(true);
+            })
+        })
+    })
+    // array of objects with 'username' property;
+    //if (obj.username) etc. 
+})
+
 describe(`GET /*`, () => {
     test('status:404, responds with an error message when passed a route that does not exist', () => {
         return request(app)
