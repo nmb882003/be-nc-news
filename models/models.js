@@ -15,3 +15,11 @@ exports.extractArticleById = (article_id) => {
         else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
     });
 };
+
+exports.updateArticleVotesById = (article_id, body) => {
+        return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`, [body.inc_votes, article_id])
+        .then(({rows}) => {
+            if (rows.length) return rows[0];
+            else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
+        });
+} ;
