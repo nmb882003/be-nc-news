@@ -70,6 +70,22 @@ describe(`GET /api/articles/:article_id`, () => {
     });
 });
 
+describe.only(`PATCH /api/articles/:article_id`, () => {
+    test(`status: 201, responds with an updated article object when passed an object with a valid 'inc_votes' property`, () => {
+        const validBody = { inc_votes: 10 };
+        const expectedVotes = 110;
+
+        return request(app)
+        .patch(`/api/articles/1`)
+        .send(validBody)
+        .expect(201)
+        .then(({body}) => {
+            const {article} = body;
+            expect(article.votes).toBe(expectedVotes);
+        });
+    });
+});
+
 describe(`GET /*`, () => {
     test('status:404, responds with an error message when passed a route that does not exist', () => {
         return request(app)
