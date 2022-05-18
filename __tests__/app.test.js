@@ -75,11 +75,11 @@ describe(`PATCH /api/articles/:article_id`, () => {
     const invalidBody1 = { inc_bananas: 10 };
     const invalidBody2 = { inc_votes: "ten" };
 
-    test(`status: 201, responds with an updated article object when passed an object with a valid 'inc_votes' property`, () => {    
+    test(`status: 200, responds with an updated article object when passed an object with a valid 'inc_votes' property`, () => {    
         return request(app)
         .patch(`/api/articles/1`)
         .send(validBody)
-        .expect(201)
+        .expect(200)
         .then(({body}) => {
             const {article} = body;
             expect(article.votes).toBe(110);

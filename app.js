@@ -14,7 +14,7 @@ app.get(`/*`, getInvalidPath);
 app.patch(`/api/articles/:article_id`, patchArticleVotesById);
 
 app.use((err, req, res, next) => {
-    if (err.code === '22P02') {
+    if (err.code === '22P02' || err.code === '23502') {
         res.status(400).send({ msg: 'Invalid request' });
     } 
     else next(err);
