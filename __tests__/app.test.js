@@ -82,7 +82,16 @@ describe(`PATCH /api/articles/:article_id`, () => {
         .expect(200)
         .then(({body}) => {
             const {article} = body;
-            expect(article.votes).toBe(110);
+            expect(article).toBeInstanceOf(Object);
+            expect(article).toEqual(expect.objectContaining({
+                author: expect.any(String),
+                title: expect.any(String),
+                article_id: expect.any(Number),
+                body: expect.any(String),  
+                topic: expect.any(String),
+                created_at: expect.any(String),
+                votes: 110
+            }));
         });
     });
     test(`status: 400, responds with an error message when passed an invalid parameteric endpoint`, () => {
