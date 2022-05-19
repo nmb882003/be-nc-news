@@ -47,6 +47,18 @@ describe(`GET /api/articles/:article_id`, () => {
             }));
         });
     });
+    // test(`status:200, responds with an article object`, () => {
+    //     return request(app)
+    //     .get(`/api/articles/2`)
+    //     .expect(200)
+    //     .then(({body}) => {
+    //         const {article} = body;
+    //         expect(article).toBeInstanceOf(Object);
+    //         expect(article).toEqual(expect.objectContaining({
+    //             comment_count: expect.any(Number)
+    //         }));
+    //     });
+    // });
     test(`status: 400, responds with an error message when passed an invalid parameteric endpoint`, () => {
         return request(app)
             .get(`/api/articles/bananas`)
