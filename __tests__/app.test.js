@@ -5,13 +5,9 @@ const db = require('../db/connection.js');
 
 const testData = require('../db/data/test-data');
 
-afterAll(() => {
-    return db.end()
-});
+beforeEach(() => seed(testData))
 
-beforeEach(() => {
-    return seed(testData);
-})
+afterAll(() => db.end());
 
 describe(`GET /api/topics`, () => {
     test(`Status:200, responds with an array of topic objects, each with 'slug' and 'description' properties`, () => {
@@ -143,15 +139,15 @@ describe(`GET /api/users`, () => {
             const {usersArray} = body;
             expect(Array.isArray(usersArray)).toBe(true);
             expect(usersArray).toHaveLength(4);
-
+            
             usersArray.forEach(user => {
-                expect(user.hasOwnProperty("username")).toBe(true);
-            })
-        })
-    })
-    // array of objects with 'username' property;
-    //if (obj.username) etc. 
-})
+                expect(user).toEqual(expect.objectContaining({
+                    username: expect.any(String),
+                }));
+            });
+        });
+    });
+});
 
 describe(`GET /*`, () => {
     test('status:404, responds with an error message when passed a route that does not exist', () => {
