@@ -47,7 +47,7 @@ describe(`GET /api/articles/:article_id`, () => {
             }));
         });
     });
-    test(`status:200, responds with an article object`, () => {
+    test(`status:200, responds with an article object containing a 'comment-count' property`, () => {
         return request(app)
         .get(`/api/articles/1`)
         .expect(200)
