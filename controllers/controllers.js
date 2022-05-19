@@ -1,4 +1,4 @@
-const { extractTopics, extractArticleById, updateArticleVotesById } = require(`../models/models.js`);
+const { extractTopics, extractArticleById, updateArticleVotesById, extractUsers } = require(`../models/models.js`);
 
 exports.getTopics = (req, res, next) => {
     extractTopics()
@@ -14,6 +14,11 @@ exports.getArticleById = (req, res, next) => {
     .catch(next);
 };
 
+exports.getUsers = (req, res, next) => {
+    extractUsers()
+    .then(usersArray => res.status(200).send({usersArray}))
+};
+
 exports.getInvalidPath = (req, res, next) => {
     res.status(404).send({ msg: "Route does not exist" });
 };
@@ -23,7 +28,6 @@ exports.patchArticleVotesById = (req, res, next) => {
     const {body} = req;
     updateArticleVotesById(article_id, body)
     .then(article => {
-        console.log(article);
         return res.status(200).send({article});
     })
     .catch(next);

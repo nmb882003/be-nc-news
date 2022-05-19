@@ -1,4 +1,4 @@
-const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById } = require(`./controllers/controllers.js`);
+const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers  } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
@@ -8,6 +8,8 @@ app.use(express.json());
 app.get('/api/topics', getTopics);
 
 app.get(`/api/articles/:article_id`, getArticleById);
+
+app.get(`/api/users`, getUsers);
 
 app.get(`/*`, getInvalidPath);
 
@@ -33,8 +35,10 @@ app.use((err, req, res, next) => {
     res.status(500).send({ msg: 'Internal server error' });
 });
 
+/*
 app.listen(8080, () => {
     console.log(`Listening on port 8080`);
 });
+*/
 
 module.exports = app;

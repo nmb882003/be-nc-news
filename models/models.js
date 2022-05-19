@@ -2,10 +2,7 @@ const db = require('../db/connection.js');
 
 exports.extractTopics = () => {
     return db.query(`SELECT * FROM topics;`)
-    .then((data) => {
-        const topicsData = data.rows;
-        return topicsData;
-    })
+    .then(({rows}) => rows);
 };
 
 exports.extractArticleById = (article_id) => {
@@ -22,4 +19,9 @@ exports.updateArticleVotesById = (article_id, body) => {
             if (rows.length) return rows[0];
             else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
         });
-} ;
+};
+
+exports.extractUsers = () => {
+    return db.query(`SELECT username FROM users`)
+    .then(({rows}) => rows)
+}

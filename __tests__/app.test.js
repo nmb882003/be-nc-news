@@ -5,13 +5,9 @@ const db = require('../db/connection.js');
 
 const testData = require('../db/data/test-data');
 
-afterAll(() => {
-    return db.end()
-});
+beforeEach(() => seed(testData))
 
-beforeEach(() => {
-    return seed(testData);
-})
+afterAll(() => db.end());
 
 describe(`GET /api/topics`, () => {
     test(`Status:200, responds with an array of topic objects, each with 'slug' and 'description' properties`, () => {
@@ -131,6 +127,25 @@ describe(`PATCH /api/articles/:article_id`, () => {
             expect(body.msg).toBe('Invalid request');
         })
 
+    });
+});
+
+describe(`GET /api/users`, () => {
+    test(`status: 200, responds with an array of objects with a 'username' property`, () => {
+        return request(app)
+        .get(`/api/users`)
+        .expect(200)
+        .then(({body}) => {
+            const {usersArray} = body;
+            expect(Array.isArray(usersArray)).toBe(true);
+            expect(usersArray).toHaveLength(4);
+            
+            usersArray.forEach(user => {
+                expect(user).toEqual(expect.objectContaining({
+                    username: expect.any(String),
+                }));
+            });
+        });
     });
 });
 
