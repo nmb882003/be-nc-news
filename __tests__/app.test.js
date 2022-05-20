@@ -161,6 +161,32 @@ describe(`GET /api/users`, () => {
     });
 });
 
+// describe.only(`GET /api/articles`, () => {
+//     test(`status: 200, responds with an array of article objects with 'author', 'title', 'article_id', 'topic', 'created_at', 'votes' and 'comment_count' properties`, () => {
+//         return request(app)
+//         .get(`/api/articles`)
+//         .expect(200)
+//         .then(({body}) => {
+//             const {articleArray} = body;
+//             expect(Array.isArray(articleArray)).toBe(true);
+//             expect(articleArray).toHaveLength(12)
+
+//             articleArray.forEach(article => {
+//                 expect(article).toEqual(expect.objectContaining({
+//                     author: expect.any(String),
+//                     title: expect.any(String),
+//                     article_id: expect.any(Number),  
+//                     topic: expect.any(String),
+//                     created_at: expect.any(String),
+//                     votes: expect.any(Number),
+//                     comment_count: expect.any(String)
+//                 }));
+//             });
+//             // also check for date sorted descending!!
+//         })
+//     })
+// })
+
 describe(`GET /*`, () => {
     test('status:404, responds with an error message when passed a route that does not exist', () => {
         return request(app)

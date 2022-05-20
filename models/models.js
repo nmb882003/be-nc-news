@@ -28,3 +28,7 @@ exports.extractUsers = () => {
     return db.query(`SELECT username FROM users`)
     .then(({rows}) => rows)
 }
+
+exports.extractArticles = () => {
+    return console.log("No chance, pal");
+}
