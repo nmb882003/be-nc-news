@@ -161,6 +161,32 @@ describe(`GET /api/users`, () => {
     });
 });
 
+describe(`GET /api/articles`, () => {
+    test(`status: 200, responds with an array of article objects with 'author', 'title', 'article_id', 'topic', 'created_at', 'votes' and 'comment_count' properties`, () => {
+        return request(app)
+        .get(`/api/articles`)
+        .expect(200)
+        .then(({body}) => {
+            const { articlesArray } = body; 
+            expect(Array.isArray(articlesArray)).toBe(true);
+            expect(articlesArray).toHaveLength(12)
+            expect(articlesArray).toBeSortedBy(`created_at`, { descending: true });
+
+            articlesArray.forEach(article => {
+                expect(article).toEqual(expect.objectContaining({
+                    author: expect.any(String),
+                    title: expect.any(String),
+                    article_id: expect.any(Number),  
+                    topic: expect.any(String),
+                    created_at: expect.any(String),
+                    votes: expect.any(Number),
+                    comment_count: expect.any(String)
+                }));
+            });
+        })
+    })
+})
+
 describe(`GET /*`, () => {
     test('status:404, responds with an error message when passed a route that does not exist', () => {
         return request(app)

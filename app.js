@@ -1,4 +1,4 @@
-const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers  } = require(`./controllers/controllers.js`);
+const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers, getArticles } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
@@ -10,6 +10,8 @@ app.get('/api/topics', getTopics);
 app.get(`/api/articles/:article_id`, getArticleById);
 
 app.get(`/api/users`, getUsers);
+
+app.get(`/api/articles`, getArticles);
 
 app.get(`/*`, getInvalidPath);
 

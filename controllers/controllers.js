@@ -1,4 +1,4 @@
-const { extractTopics, extractArticleById, updateArticleVotesById, extractUsers } = require(`../models/models.js`);
+const { extractTopics, extractArticleById, updateArticleVotesById, extractUsers, extractArticles } = require(`../models/models.js`);
 
 exports.getTopics = (req, res, next) => {
     extractTopics()
@@ -32,3 +32,12 @@ exports.patchArticleVotesById = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.getArticles = (req, res, next) => {
+
+    extractArticles()
+    .then(articlesArray => {
+        res.status(200).send({articlesArray});
+    })
+    .catch(next);
+}
