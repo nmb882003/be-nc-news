@@ -161,7 +161,7 @@ describe(`GET /api/users`, () => {
     });
 });
 
-describe.only(`GET /api/articles`, () => {
+describe(`GET /api/articles`, () => {
     test(`status: 200, responds with an array of article objects with 'author', 'title', 'article_id', 'topic', 'created_at', 'votes' and 'comment_count' properties`, () => {
         return request(app)
         .get(`/api/articles`)
