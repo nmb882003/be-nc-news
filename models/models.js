@@ -6,17 +6,11 @@ exports.extractTopics = () => {
 };
 
 exports.extractArticleById = (article_id) => {
-    const articlePromise = db.query(`SELECT * FROM articles WHERE article_id = $1;`, [article_id]);
-    const commentsPromise = db.query(`SELECT * FROM comments WHERE article_id = $1;`, [article_id]);
+    return db.query(`SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id  WHERE articles.article_id = $1 GROUP BY articles.article_id;`, [article_id])
 
-    return Promise.all([articlePromise, commentsPromise])
-
-    .then(([articleData, commentsData]) => {
-        const numberOfComments = commentsData.rows.length;
-
-        if (articleData.rows.length) {
-            articleData.rows[0].comment_count = numberOfComments;
-            return articleData.rows[0];
+    .then(({rows}) => {
+        if (rows.length) {
+            return rows[0];
         }
         else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
     });

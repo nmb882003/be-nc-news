@@ -28,7 +28,7 @@ describe(`GET /api/topics`, () => {
     })
 });
 
-describe(`GET /api/articles/:article_id`, () => {
+describe.only(`GET /api/articles/:article_id`, () => {
     test(`status:200, responds with an article object`, () => {
         return request(app)
         .get(`/api/articles/2`)
@@ -47,16 +47,15 @@ describe(`GET /api/articles/:article_id`, () => {
             }));
         });
     });
-    test(`status:200, responds with an article object containing a 'comment-count' property`, () => {
+    test(`status:200, responds with an article object also containing a 'comment_count' property`, () => {
         return request(app)
         .get(`/api/articles/1`)
         .expect(200)
         .then(({body}) => {
             const {article} = body;
-            console.log(article);
             expect(article).toBeInstanceOf(Object);
             expect(article).toEqual(expect.objectContaining({
-                comment_count: 11
+                comment_count: "11"
             }));
         });
     });
