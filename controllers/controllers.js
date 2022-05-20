@@ -34,7 +34,10 @@ exports.patchArticleVotesById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
+
     extractArticles()
-    .then()
+    .then(articlesArray => {
+        res.status(200).send({articlesArray});
+    })
     .catch(next);
 }
