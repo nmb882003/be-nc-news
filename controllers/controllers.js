@@ -1,4 +1,4 @@
-const { extractTopics, extractArticleById, updateArticleVotesById, extractUsers, extractArticles, extractComments } = require(`../models/models.js`);
+const { extractTopics, extractArticleById, updateArticleVotesById, extractUsers, extractArticles, extractArticleCommentsById } = require(`../models/models.js`);
 
 exports.getTopics = (req, res, next) => {
     extractTopics()
@@ -41,9 +41,11 @@ exports.getArticles = (req, res, next) => {
     .catch(next);
 };
 
-exports.getArticleCommentsById() = (req, res, next) => {
-    extractArticleCommentsbyId()
-    .then(commentsArray => commentsArray);
-
-
+exports.getArticleCommentsById = (req, res, next) => {
+    const {article_id} = req.params;
+    extractArticleCommentsById(article_id)
+    .then(commentsArray => {
+        res.send(200, { commentsArray });
+    })
+    .catch(next);
 };
