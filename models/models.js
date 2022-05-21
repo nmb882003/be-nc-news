@@ -27,7 +27,7 @@ exports.updateArticleVotesById = (article_id, body) => {
 exports.extractUsers = () => {
     return db.query(`SELECT username FROM users`)
     .then(({rows}) => rows)
-}
+};
 
 exports.extractArticles = () => {
     return db.query(`SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id ORDER BY created_at DESC;`)
@@ -39,4 +39,15 @@ exports.extractArticles = () => {
         })
         return noBodyRows;
     })
-}
+};
+
+exports.extractArticleCommentsById = (article_id) => {
+    return db.query(`SELECT * FROM comments WHERE article_id = $1`, [article_id])
+
+    .then(({rows}) => {
+        if (rows.length) {
+            return rows;
+        }
+        else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
+    })
+};
