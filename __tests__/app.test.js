@@ -188,7 +188,7 @@ describe(`GET /api/articles`, () => {
 })
 
 describe(`GET /api/articles/:article_id/comments`, () => {
-    test(`status: 200, responds with a an array of comments for the given article_id, each with 'comment_id', 'votes', 'created_at', 'author' and 'body' properties`, () => {
+    test(`status: 200, responds with an array of comments for the given article_id, each with 'comment_id', 'votes', 'created_at', 'author' and 'body' properties`, () => {
         return request(app)
         .get(`/api/articles/1/comments`)
         .expect(200)
@@ -209,6 +209,24 @@ describe(`GET /api/articles/:article_id/comments`, () => {
                 }));
             });
         });
+    })
+
+    test(`status: 400, responds with an error message when passed an invalid parameteric endpoint`, () => {
+        return request(app)
+            .get(`/api/articles/bananas/comments`)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe(`Invalid request`);
+             });
+    });
+
+    test(`status: 404, responds with an error message when passed an entry that doesn't exist`, () => {
+        return request(app)
+            .get(`/api/articles/333/comments`)
+            .expect(404)
+            .then(({body}) => {
+                expect(body.msg).toBe(`Entry not found`);
+            });
     })
 })
 

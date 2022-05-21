@@ -44,5 +44,10 @@ exports.extractArticles = () => {
 exports.extractArticleCommentsById = (article_id) => {
     return db.query(`SELECT * FROM comments WHERE article_id = $1`, [article_id])
 
-    .then(({rows}) => rows)
+    .then(({rows}) => {
+        if (rows.length) {
+            return rows;
+        }
+        else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
+    })
 };
