@@ -22,7 +22,7 @@ app.patch(`/api/articles/:article_id`, patchArticleVotesById);
 app.post(`/api/articles/:article_id/comments`, postArticleCommentById);
 
 app.use((err, req, res, next) => {
-    if (err.code === '22P02' || err.code === '23502' || err.code === '23503') {
+    if (err.code === '22P02' || err.code === '23502') {
         res.status(400).send({ msg: 'Invalid request' });
     } 
     else next(err);

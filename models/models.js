@@ -56,7 +56,7 @@ exports.extractArticleCommentsById = (article_id) => {
 exports.insertArticleCommentById = (article_id, body) => {
     let toBeInserted = [body.post, article_id, body.username, 0, new Date()]; 
     let queryString = format(`INSERT INTO comments (body, article_id, author, votes, created_at) VALUES (%L) RETURNING *;`, toBeInserted);
-    
+
     return db.query(queryString) 
 
     .then(({rows}) => {

@@ -233,7 +233,7 @@ describe(`GET /api/articles/:article_id/comments`, () => {
 describe.only(`POST /api/articles/:article_id/comments`, () => {
 
     const validBody = { username: "butter_bridge", post: "I'm outraged by this! It's political correctness gone mad, I tell you!" };
-    const invalidBody = { name: "butter_bridge", post: "Down with this kind of thing" };
+    const invalidBody = { alias: "butter_bridge", post: "Down with this kind of thing" };
     const invalidBody2 = { username: "butter_bridge", favourite_colour: "yellow" };
     const invalidBody3 = { username: 616, post: "The sink is full of fishes, she's got dirty dishes on the brain" };
     const invalidBody4 = { username: "G.O.B.", post: "I've made a huge mistake" };
