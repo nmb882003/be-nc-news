@@ -1,4 +1,5 @@
 const db = require('../db/connection.js');
+const format = require("pg-format");
 
 exports.extractTopics = () => {
     return db.query(`SELECT * FROM topics;`)
@@ -47,6 +48,20 @@ exports.extractArticleCommentsById = (article_id) => {
     .then(({rows}) => {
         if (rows.length) {
             return rows;
+        }
+        else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
+    })
+};
+
+exports.insertArticleCommentById = (article_id, body) => {
+    let toBeInserted = [body.post, article_id, body.username, 0, new Date()]; 
+    let queryString = format(`INSERT INTO comments (body, article_id, author, votes, created_at) VALUES (%L) RETURNING *;`, toBeInserted);
+    
+    return db.query(queryString) 
+
+    .then(({rows}) => {
+        if (rows.length) {
+            return rows[0];
         }
         else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
     })

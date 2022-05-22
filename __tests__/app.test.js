@@ -230,6 +230,44 @@ describe(`GET /api/articles/:article_id/comments`, () => {
     })
 })
 
+describe.only(`POST /api/articles/:article_id/comments`, () => {
+
+    const validBody = { username: "butter_bridge", post: "I'm outraged by this! It's political correctness gone mad, I tell you!" };
+    const invalidBody = { name: "butter_bridge", post: "Down with this kind of thing" };
+    const invalidBody2 = { username: "butter_bridge", favourite_colour: "yellow" };
+    const invalidBody3 = { username: 616, post: "The sink is full of fishes, she's got dirty dishes on the brain" };
+    const invalidBody4 = { username: "G.O.B.", post: "I've made a huge mistake" };
+
+    test(`status: 201, responds with the posted comment object`, () => {
+        return request(app)
+        .post(`/api/articles/1/comments`)
+        .send(validBody)
+        .expect(201)
+        .then(({body}) => {
+            const {postedComment} = body;
+            expect(postedComment).toBeInstanceOf(Object);
+            expect(postedComment).toEqual(expect.objectContaining({
+                comment_id: expect.any(Number),
+                body: expect.any(String),
+                article_id: expect.any(Number),
+                author: expect.any(String),  
+                created_at: expect.any(String),
+                votes: expect.any(Number)
+            }));
+        })
+    })
+    // test(`status: 400, responds with an error when passed an object without a 'username' property`, () => {
+    //     return request(app)
+    //     .post(`/api/articles/1/comments`)
+    //     .send(invalidBody)
+    //     .expect(400)
+    //     .then(({body} => {
+
+    //     }))
+    // })
+    // change previous test so that object values aren't hardcoded!
+})
+
 describe(`GET /*`, () => {
     test('status:404, responds with an error message when passed a route that does not exist', () => {
         return request(app)

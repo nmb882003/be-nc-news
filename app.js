@@ -1,4 +1,4 @@
-const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers, getArticles, getArticleCommentsById } = require(`./controllers/controllers.js`);
+const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers, getArticles, getArticleCommentsById, postArticleCommentById } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
@@ -19,8 +19,10 @@ app.get(`/*`, getInvalidPath);
 
 app.patch(`/api/articles/:article_id`, patchArticleVotesById);
 
+app.post(`/api/articles/:article_id/comments`, postArticleCommentById);
+
 app.use((err, req, res, next) => {
-    if (err.code === '22P02' || err.code === '23502') {
+    if (err.code === '22P02' || err.code === '23502' || err.code === '23503') {
         res.status(400).send({ msg: 'Invalid request' });
     } 
     else next(err);
