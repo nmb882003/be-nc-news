@@ -233,7 +233,7 @@ describe(`GET /api/articles/:article_id/comments`, () => {
 describe.only(`POST /api/articles/:article_id/comments`, () => {
 
     const validBody = { username: "butter_bridge", post: "I'm outraged by this! It's political correctness gone mad, I tell you!" };
-    const invalidBody = { alias: "butter_bridge", post: "Down with this kind of thing" };
+    const invalidBody = { post: "Down with this kind of thing!!!" };
     const invalidBody2 = { username: "butter_bridge", favourite_colour: "yellow" };
     const invalidBody3 = { username: 616, post: "The sink is full of fishes, she's got dirty dishes on the brain" };
     const invalidBody4 = { username: "G.O.B.", post: "I've made a huge mistake" };
@@ -248,11 +248,11 @@ describe.only(`POST /api/articles/:article_id/comments`, () => {
             expect(postedComment).toBeInstanceOf(Object);
             expect(postedComment).toEqual(expect.objectContaining({
                 comment_id: expect.any(Number),
-                body: expect.any(String),
-                article_id: expect.any(Number),
-                author: expect.any(String),  
+                body: validBody.post,
+                article_id: 1,
+                author: validBody.username,  
                 created_at: expect.any(String),
-                votes: expect.any(Number)
+                votes: 0
             }));
         })
     })
