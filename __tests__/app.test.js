@@ -303,6 +303,8 @@ describe(`POST /api/articles/:article_id/comments`, () => {
         })
     });
 })
+// add further test for invalid article_id
+
 
 describe(`GET /*`, () => {
     test('status:404, responds with an error message when passed a route that does not exist', () => {
