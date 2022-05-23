@@ -56,7 +56,7 @@ exports.extractArticleCommentsById = (article_id) => {
 exports.insertArticleCommentById = (article_id, body) => {
     const { post, username } = body;
 
-    if (typeof post !== "string") return Promise.reject ({ errStatus: 400, msg: "Invalid request"});
+    if (typeof post !== "string" || typeof username !== "string") return Promise.reject ({ errStatus: 400, msg: "Invalid request"});
     
     const toBeInserted = [post, article_id, username, 0, new Date()];
     const queryString = format(`INSERT INTO comments (body, article_id, author, votes, created_at) VALUES (%L) RETURNING *;`, toBeInserted);

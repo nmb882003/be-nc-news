@@ -220,7 +220,7 @@ describe(`GET /api/articles/:article_id/comments`, () => {
              });
     });
 
-    test(`status: 404, responds with an error message when passed an entry that doesn't exist`, () => {
+    test(`status: 404, responds with an error message when passed a valid endpoint where the resource doesn't exist`, () => {
         return request(app)
             .get(`/api/articles/333/comments`)
             .expect(404)
@@ -299,9 +299,25 @@ describe(`POST /api/articles/:article_id/comments`, () => {
         .send(invalidBody5)
         .expect(400)
         .then(({ body }) => {
-            expect(body.msg).toBe('Invalid request');
+            expect(body.msg).toBe('Invalid - username not found');
         })
     });
+    test(`status: 400, responds with an error message when passed an invalid parametric endpoint`, () => {
+        return request(app)
+        .post(`/api/articles/bananas/comments`)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Invalid request');
+        })
+    })
+    test(`status: 404, responds with an error message when passed a valid endpoint where the resource doesn't exist`, () => {
+        return request(app)
+        .post(`/api/articles/222/comments`)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe('Invalid request');
+        })
+    })
 })
 
 describe(`GET /*`, () => {
