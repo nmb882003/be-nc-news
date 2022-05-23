@@ -27,7 +27,7 @@ exports.updateArticleVotesById = (article_id, body) => {
 
 exports.extractUsers = () => {
     return db.query(`SELECT username FROM users`)
-    .then(({rows}) => rows)
+    .then(({rows}) => rows);
 };
 
 exports.extractArticles = () => {
@@ -39,7 +39,7 @@ exports.extractArticles = () => {
             return article;
         })
         return noBodyRows;
-    })
+    });
 };
 
 exports.extractArticleCommentsById = (article_id) => {
@@ -50,12 +50,16 @@ exports.extractArticleCommentsById = (article_id) => {
             return rows;
         }
         else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
-    })
+    });
 };
 
 exports.insertArticleCommentById = (article_id, body) => {
-    let toBeInserted = [body.post, article_id, body.username, 0, new Date()]; 
-    let queryString = format(`INSERT INTO comments (body, article_id, author, votes, created_at) VALUES (%L) RETURNING *;`, toBeInserted);
+    const { post, username } = body;
+
+    if (typeof post !== "string") return Promise.reject ({ errStatus: 400, msg: "Invalid request"});
+    
+    const toBeInserted = [post, article_id, username, 0, new Date()];
+    const queryString = format(`INSERT INTO comments (body, article_id, author, votes, created_at) VALUES (%L) RETURNING *;`, toBeInserted);
 
     return db.query(queryString) 
 
@@ -64,5 +68,5 @@ exports.insertArticleCommentById = (article_id, body) => {
             return rows[0];
         }
         else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
-    })
+    });
 };
