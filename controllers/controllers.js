@@ -39,7 +39,7 @@ exports.patchArticleVotesById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-    extractArticles()
+    extractArticles(req.query)
 
     .then(articlesArray => {
         res.status(200).send({articlesArray});

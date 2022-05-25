@@ -162,7 +162,7 @@ describe(`GET /api/users`, () => {
 });
 
 describe(`GET /api/articles`, () => {
-    test(`status: 200, responds with an array of article objects with 'author', 'title', 'article_id', 'topic', 'created_at', 'votes' and 'comment_count' properties`, () => {
+    test(`status: 200, responds with an array of article objects with 'author', 'title', 'article_id', 'topic', 'created_at', 'votes' and 'comment_count' properties, sorted by date in descending order`, () => {
         return request(app)
         .get(`/api/articles`)
         .expect(200)
@@ -184,6 +184,45 @@ describe(`GET /api/articles`, () => {
                 }));
             });
         })
+    })
+    test(`status: 200, accepts a 'sorted_by' query and responds with an array of article objects sorted by column (defaults to 'created_at')`, () => {
+        return request(app)
+        .get(`/api/articles?sorted_by=votes`)
+        .expect(200)
+        .then(({body}) => {
+            const { articlesArray } = body; 
+            expect(Array.isArray(articlesArray)).toBe(true);
+            expect(articlesArray).toHaveLength(12)
+            expect(articlesArray).toBeSortedBy(`votes`, { descending: true });
+        }) 
+    })
+    test(`status: 400, responds with an error message when 'sorted_by' query is used with an invalid column name`, () => {
+        return request(app)
+        .get(`/api/articles?sorted_by=length`)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe(`Invalid sort query: 'length' should be a valid column name`); 
+        }) 
+    })
+    test(`status: 200, accepts an 'order' query to indicate the sort direction and responds with a sorted array of article objects (defaults to 'desc')`, () => {
+        return request(app)
+        .get(`/api/articles?order=asc`)
+        .expect(200)
+        .then(({body}) => {
+            const { articlesArray } = body;
+                
+            expect(Array.isArray(articlesArray)).toBe(true);
+            expect(articlesArray).toHaveLength(12)
+            expect(articlesArray).toBeSortedBy(`created_at`, { descending: false });
+        })
+    })
+    test(`status: 400, responds with an error message when 'order' query is used with an invalid sort direction`, () => {
+        return request(app)
+        .get(`/api/articles?order=up`)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe(`Invalid order query: should be either 'asc' or 'desc'`); 
+        }) 
     })
 })
 
