@@ -224,7 +224,22 @@ describe(`GET /api/articles`, () => {
             expect(body.msg).toBe(`Invalid order query: should be either 'asc' or 'desc'`); 
         }) 
     })
-})
+    test(`status: 200, accepts a 'topic' query and responds with an array of article objects matching that topic`, () => {
+        return request(app)
+        .get(`/api/articles?topic=cats`)
+        .expect(200)
+        .then(({body}) => {
+            const {articlesArray} = body;
+            expect(Array.isArray(articlesArray)).toBe(true);
+            expect(articlesArray).toHaveLength(1);
+            
+            articlesArray.forEach(article => {
+                expect(article.topic).toBe("cats");
+            });
+        });
+    });
+    //test(`status: `)
+});
 
 describe(`GET /api/articles/:article_id/comments`, () => {
     test(`status: 200, responds with an array of comments for the given article_id, each with 'comment_id', 'votes', 'created_at', 'author' and 'body' properties`, () => {
