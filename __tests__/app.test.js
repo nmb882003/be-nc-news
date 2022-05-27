@@ -216,6 +216,18 @@ describe(`GET /api/articles`, () => {
             expect(articlesArray).toBeSortedBy(`created_at`, { descending: false });
         })
     })
+    test(`status: 200, accepts multiple queries to  return a sorted array of topics on a particular topic`, () => {
+        return request(app)
+        .get(`/api/articles?sorted_by=author&order=asc&topic=mitch`)
+        .expect(200)
+        .then(({body}) => {
+            const { articlesArray } = body;
+
+            expect(Array.isArray(articlesArray)).toBe(true);
+            expect(articlesArray).toHaveLength(11)
+            expect(articlesArray).toBeSortedBy(`author`, { descending: false });
+        })
+    })
     test(`status: 400, responds with an error message when 'order' query is used with an invalid sort direction`, () => {
         return request(app)
         .get(`/api/articles?order=up`)
@@ -238,7 +250,22 @@ describe(`GET /api/articles`, () => {
             });
         });
     });
-    //test(`status: `)
+    test(`status: 400, returns an error message when passed an invalid 'topic' query`, () => {
+        return request(app)
+        .get(`/api/articles?topic=enneagram`)
+        .expect(400)
+        .then(({body}) => {
+            expect (body.msg).toBe(`Invalid topic query: 'enneagram' should be a valid topic category`);
+        })
+    })
+    test(`status: 404, returns an error message when passed an valid 'topic' query but which has no results`, () => {
+        return request(app)
+        .get(`/api/articles?topic=paper`)
+        .expect(404)
+        .then(({body}) => {
+            expect (body.msg).toBe(`No articles associated with topic 'paper'`);
+        })
+    })
 });
 
 describe(`GET /api/articles/:article_id/comments`, () => {
