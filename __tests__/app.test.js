@@ -162,7 +162,7 @@ describe(`GET /api/users`, () => {
 });
 
 describe(`GET /api/articles`, () => {
-    test(`status: 200, responds with an array of article objects with 'author', 'title', 'article_id', 'topic', 'created_at', 'votes' and 'comment_count' properties`, () => {
+    test(`status: 200, responds with an array of article objects with 'author', 'title', 'article_id', 'topic', 'created_at', 'votes' and 'comment_count' properties, sorted by date in descending order`, () => {
         return request(app)
         .get(`/api/articles`)
         .expect(200)
@@ -185,7 +185,88 @@ describe(`GET /api/articles`, () => {
             });
         })
     })
-})
+    test(`status: 200, accepts a 'sorted_by' query and responds with an array of article objects sorted by column (defaults to 'created_at')`, () => {
+        return request(app)
+        .get(`/api/articles?sorted_by=votes`)
+        .expect(200)
+        .then(({body}) => {
+            const { articlesArray } = body; 
+            expect(Array.isArray(articlesArray)).toBe(true);
+            expect(articlesArray).toHaveLength(12)
+            expect(articlesArray).toBeSortedBy(`votes`, { descending: true });
+        }) 
+    })
+    test(`status: 400, responds with an error message when 'sorted_by' query is used with an invalid column name`, () => {
+        return request(app)
+        .get(`/api/articles?sorted_by=length`)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe(`Invalid sort query: 'length' should be a valid column name`); 
+        }) 
+    })
+    test(`status: 200, accepts an 'order' query to indicate the sort direction and responds with a sorted array of article objects (defaults to 'desc')`, () => {
+        return request(app)
+        .get(`/api/articles?order=asc`)
+        .expect(200)
+        .then(({body}) => {
+            const { articlesArray } = body;
+                
+            expect(Array.isArray(articlesArray)).toBe(true);
+            expect(articlesArray).toHaveLength(12)
+            expect(articlesArray).toBeSortedBy(`created_at`, { descending: false });
+        })
+    })
+    test(`status: 200, accepts multiple queries to  return a sorted array of topics on a particular topic`, () => {
+        return request(app)
+        .get(`/api/articles?sorted_by=author&order=asc&topic=mitch`)
+        .expect(200)
+        .then(({body}) => {
+            const { articlesArray } = body;
+
+            expect(Array.isArray(articlesArray)).toBe(true);
+            expect(articlesArray).toHaveLength(11)
+            expect(articlesArray).toBeSortedBy(`author`, { descending: false });
+        })
+    })
+    test(`status: 400, responds with an error message when 'order' query is used with an invalid sort direction`, () => {
+        return request(app)
+        .get(`/api/articles?order=up`)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe(`Invalid order query: should be either 'asc' or 'desc'`); 
+        }) 
+    })
+    test(`status: 200, accepts a 'topic' query and responds with an array of article objects matching that topic`, () => {
+        return request(app)
+        .get(`/api/articles?topic=cats`)
+        .expect(200)
+        .then(({body}) => {
+            const {articlesArray} = body;
+            expect(Array.isArray(articlesArray)).toBe(true);
+            expect(articlesArray).toHaveLength(1);
+            
+            articlesArray.forEach(article => {
+                expect(article.topic).toBe("cats");
+            });
+        });
+    });
+    test(`status: 400, returns an error message when passed an invalid 'topic' query`, () => {
+        return request(app)
+        .get(`/api/articles?topic=enneagram`)
+        .expect(400)
+        .then(({body}) => {
+            expect (body.msg).toBe(`Invalid topic query: 'enneagram' should be a valid topic category`);
+        })
+    })
+    test(`status: 404, returns an error message when passed an valid 'topic' query but which has no results`, () => {
+        return request(app)
+        .get(`/api/articles?topic=paper`)
+        .expect(404)
+        .then(({body}) => {
+            expect (body.msg).toBe(`No articles associated with topic 'paper'`);
+        })
+    })
+});
 
 describe(`GET /api/articles/:article_id/comments`, () => {
     test(`status: 200, responds with an array of comments for the given article_id, each with 'comment_id', 'votes', 'created_at', 'author' and 'body' properties`, () => {

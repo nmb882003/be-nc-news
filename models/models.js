@@ -30,15 +30,50 @@ exports.extractUsers = () => {
     .then(({rows}) => rows);
 };
 
-exports.extractArticles = () => {
-    return db.query(`SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id GROUP BY articles.article_id ORDER BY created_at DESC;`)
+exports.extractArticles = (queries) => {
+    const { sorted_by = "created_at", order = "desc", topic = "" } = queries;
+    let queryString = "", queryValue = [];
+
+    const checkTopicExists = (topicToCheck) => {
+        return db.query(`SELECT * FROM topics WHERE slug = $1`, [topicToCheck])
+
+        .then(({rows}) => {
+            if (rows.length) {
+                return Promise.reject({ errStatus: 404, msg: `No articles associated with topic '${topic}'`});
+            }
+            if (!rows.length) {
+                return Promise.reject({ errStatus: 400, msg: `Invalid topic query: '${topic}' should be a valid topic category`})
+            }
+        })
+    }
+
+    if (!["article_id", "title", "topic", "author", "body", "created_at", "votes"].includes(sorted_by)) {
+        return Promise.reject({ errStatus: 400, msg: `Invalid sort query: '${sorted_by}' should be a valid column name` })
+    }
+    if (!["asc", "desc"].includes(order)) {
+        return Promise.reject({ errStatus: 400, msg: `Invalid order query: should be either 'asc' or 'desc'`})
+    }
+
+    queryString += `SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id `;
+
+    if (topic !== "") {
+        queryString += `WHERE topic = $1 `;
+        queryValue.push(topic);
+    }
+
+    queryString += `GROUP BY articles.article_id ORDER BY ${sorted_by} ${order.toUpperCase()};`
+
+    return db.query(queryString, queryValue)
 
     .then(({rows}) => {
-        const noBodyRows = rows.map(article => {
+        if (!rows.length) {
+            return checkTopicExists(topic);
+        }
+        const modifiedRows = rows.map(article => {
             delete article.body;
             return article;
         })
-        return noBodyRows;
+        return modifiedRows;
     });
 };
 
