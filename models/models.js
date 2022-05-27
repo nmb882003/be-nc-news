@@ -105,3 +105,8 @@ exports.insertArticleCommentById = (article_id, body) => {
         else return Promise.reject({ errStatus: 404, msg: "Entry not found"});
     });
 };
+
+exports.removeCommentById = () => {
+    // DELETE FROM comments WHERE comment_id = $1, [comment_id];
+    
+};

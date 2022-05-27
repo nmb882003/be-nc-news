@@ -1,4 +1,4 @@
-const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers, getArticles, getArticleCommentsById, postArticleCommentById } = require(`./controllers/controllers.js`);
+const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers, getArticles, getArticleCommentsById, postArticleCommentById, deleteCommentById } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
@@ -20,6 +20,8 @@ app.get(`/*`, getInvalidPath);
 app.patch(`/api/articles/:article_id`, patchArticleVotesById);
 
 app.post(`/api/articles/:article_id/comments`, postArticleCommentById);
+
+app.delete(`/api/comments/:comment_id`, deleteCommentById);
 
 app.use((err, req, res, next) => {
     if (err.code === '22P02' || err.code === '23502') {
