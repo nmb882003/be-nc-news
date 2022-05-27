@@ -67,7 +67,6 @@ describe(`GET /api/articles/:article_id`, () => {
             expect(body.msg).toBe('Invalid request');
         });
     });
-
     test(`status: 404, responds with an error message when passed an article_id that doesn't exist`, () => {
         return request(app)
         .get(`/api/articles/333`)
@@ -291,7 +290,6 @@ describe(`GET /api/articles/:article_id/comments`, () => {
             });
         });
     })
-
     test(`status: 400, responds with an error message when passed an invalid parameteric endpoint`, () => {
         return request(app)
             .get(`/api/articles/bananas/comments`)
@@ -300,7 +298,6 @@ describe(`GET /api/articles/:article_id/comments`, () => {
                 expect(body.msg).toBe(`Invalid request`);
              });
     });
-
     test(`status: 404, responds with an error message when passed a valid endpoint where the resource doesn't exist`, () => {
         return request(app)
             .get(`/api/articles/333/comments`)

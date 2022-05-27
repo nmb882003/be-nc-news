@@ -108,5 +108,5 @@ exports.insertArticleCommentById = (article_id, body) => {
 
 exports.removeCommentById = () => {
     // DELETE FROM comments WHERE comment_id = $1, [comment_id];
-    
+    // 204 error code RETURNS NO BODY!!!
 };
