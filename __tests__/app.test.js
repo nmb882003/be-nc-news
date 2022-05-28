@@ -408,3 +408,19 @@ describe(`POST /api/articles/:article_id/comments`, () => {
         })
     })
 })
+
+describe(`DELETE /api/comments/:comment_id`, () => {
+    test(`status: 204, responds with no content`, () => {
+        return request(app)
+        .delete(`/api/comments/7`)
+        .expect(204)
+        .then(({body}) => {
+            expect(body).toEqual({});
+        })
+    })
+    // test(`status: 400, resonds with an error message when an invalid parametric endpoint is used`, () => {
+
+
+
+    // })
+})
