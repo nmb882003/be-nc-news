@@ -77,70 +77,6 @@ describe(`GET /api/articles/:article_id`, () => {
     });
 });
 
-describe(`PATCH /api/articles/:article_id`, () => {
-    const validBody = { inc_votes: 10 };
-    const invalidBody1 = { inc_bananas: 10 };
-    const invalidBody2 = { inc_votes: "ten" };
-
-    test(`status: 200, responds with an updated article object when passed an object with a valid 'inc_votes' property`, () => {    
-        return request(app)
-        .patch(`/api/articles/1`)
-        .send(validBody)
-        .expect(200)
-        .then(({body}) => {
-            const {article} = body;
-            expect(article).toBeInstanceOf(Object);
-            expect(article).toEqual(expect.objectContaining({
-                author: expect.any(String),
-                title: expect.any(String),
-                article_id: expect.any(Number),
-                body: expect.any(String),  
-                topic: expect.any(String),
-                created_at: expect.any(String),
-                votes: 110
-            }));
-        });
-    });
-    test(`status: 400, responds with an error message when passed an invalid parameteric endpoint`, () => {
-        return request(app)
-            .patch(`/api/articles/bananas`)
-            .send(validBody)
-            .expect(400)
-            .then(({ body }) => {
-                expect(body.msg).toBe('Invalid request');
-            });
-    });
-    test(`status: 404, responds with an error message when passed an article_id that doesn't exist`, () => {
-        return request(app)
-        .patch(`/api/articles/333`)
-        .send(validBody)
-        .expect(404)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Entry not found');
-        })
-    });
-    test(`status: 400, responds with an error message when passed an object without a 'inc_votes' property`, () => {
-        return request(app)
-        .patch(`/api/articles/1`)
-        .send(invalidBody1)
-        .expect(400)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Invalid request');
-        })
-
-    });
-    test(`status: 400, responds with an error message when passed an object where the 'inc_votes' property is not a number`, () => {
-        return request(app)
-        .patch(`/api/articles/1`)
-        .send(invalidBody2)
-        .expect(400)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Invalid request');
-        })
-
-    });
-});
-
 describe(`GET /api/users`, () => {
     test(`status: 200, responds with an array of objects with a 'username' property`, () => {
         return request(app)
@@ -308,6 +244,81 @@ describe(`GET /api/articles/:article_id/comments`, () => {
     })
 })
 
+describe(`GET /*`, () => {
+    test('status:404, responds with an error message when passed a route that does not exist', () => {
+        return request(app)
+        .get('/api/tropics')
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe('Route does not exist');
+        });
+    });
+});
+
+describe(`PATCH /api/articles/:article_id`, () => {
+    const validBody = { inc_votes: 10 };
+    const invalidBody1 = { inc_bananas: 10 };
+    const invalidBody2 = { inc_votes: "ten" };
+
+    test(`status: 200, responds with an updated article object when passed an object with a valid 'inc_votes' property`, () => {    
+        return request(app)
+        .patch(`/api/articles/1`)
+        .send(validBody)
+        .expect(200)
+        .then(({body}) => {
+            const {article} = body;
+            expect(article).toBeInstanceOf(Object);
+            expect(article).toEqual(expect.objectContaining({
+                author: expect.any(String),
+                title: expect.any(String),
+                article_id: expect.any(Number),
+                body: expect.any(String),  
+                topic: expect.any(String),
+                created_at: expect.any(String),
+                votes: 110
+            }));
+        });
+    });
+    test(`status: 400, responds with an error message when passed an invalid parameteric endpoint`, () => {
+        return request(app)
+            .patch(`/api/articles/bananas`)
+            .send(validBody)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Invalid request');
+            });
+    });
+    test(`status: 404, responds with an error message when passed an article_id that doesn't exist`, () => {
+        return request(app)
+        .patch(`/api/articles/333`)
+        .send(validBody)
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe('Entry not found');
+        })
+    });
+    test(`status: 400, responds with an error message when passed an object without a 'inc_votes' property`, () => {
+        return request(app)
+        .patch(`/api/articles/1`)
+        .send(invalidBody1)
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe('Invalid request');
+        })
+
+    });
+    test(`status: 400, responds with an error message when passed an object where the 'inc_votes' property is not a number`, () => {
+        return request(app)
+        .patch(`/api/articles/1`)
+        .send(invalidBody2)
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe('Invalid request');
+        })
+
+    });
+});
+
 describe(`POST /api/articles/:article_id/comments`, () => {
 
     const validBody = { username: "butter_bridge", post: "I'm outraged by this! It's political correctness gone mad, I tell you!" };
@@ -397,14 +408,3 @@ describe(`POST /api/articles/:article_id/comments`, () => {
         })
     })
 })
-
-describe(`GET /*`, () => {
-    test('status:404, responds with an error message when passed a route that does not exist', () => {
-        return request(app)
-        .get('/api/tropics')
-        .expect(404)
-        .then(({ body }) => {
-            expect(body.msg).toBe('Route does not exist');
-        });
-    });
-});
