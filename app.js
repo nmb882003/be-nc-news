@@ -1,4 +1,4 @@
-const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers, getArticles, getArticleCommentsById, postArticleCommentById } = require(`./controllers/controllers.js`);
+const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers, getArticles, getArticleCommentsById, postArticleCommentById, deleteCommentById } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
@@ -21,11 +21,17 @@ app.patch(`/api/articles/:article_id`, patchArticleVotesById);
 
 app.post(`/api/articles/:article_id/comments`, postArticleCommentById);
 
+app.delete(`/api/comments/:comment_id`, deleteCommentById);
+
 app.use((err, req, res, next) => {
     if (err.code === '22P02' || err.code === '23502') {
         res.status(400).send({ msg: 'Invalid request' });
     } else if (err.code === '23503') {
-        res.status(400).send({ msg: 'Invalid - username not found' });
+        if (err.constraint === 'comments_author_fkey') {
+            res.status(400).send({ msg: 'Invalid request - username not found' });
+        } else if (err.constraint === 'comments_article_id_fkey') {
+            res.status(404).send({ msg: 'Article not found'});
+        }
     }
     else next(err);
 })

@@ -1,4 +1,4 @@
-const { extractTopics, extractArticleById, updateArticleVotesById, extractUsers, extractArticles, extractArticleCommentsById, insertArticleCommentById } = require(`../models/models.js`);
+const { extractTopics, extractArticleById, updateArticleVotesById, extractUsers, extractArticles, extractArticleCommentsById, insertArticleCommentById, removeCommentById } = require(`../models/models.js`);
 
 exports.getTopics = (req, res, next) => {
     extractTopics()
@@ -68,4 +68,15 @@ exports.postArticleCommentById = (req, res, next) => {
         res.status(201).send({ postedComment });
     })
     .catch(next)
-}
+};
+
+exports.deleteCommentById = (req, res, next) => {
+    const {comment_id} = req.params;
+
+    removeCommentById(comment_id)
+
+    .then(() => {
+        res.status(204).send({});
+    })
+    .catch(next);
+};
