@@ -58,7 +58,7 @@
         "author": "aboynamedsue",
         "body": "Text from the article..",
         "created_at": 1527695953341,
-        "votes": 4,
+        "votes": 34,
         "comment_count": 13
       }
     }
@@ -70,12 +70,49 @@
       "comments": [
         {
           "comment_id": 32,
-          "body": "Is this someone's idea of a joke? It's political correctness gone mad, I tell you!",
-          "votes": 0,
+          "votes": -4,
+          "created_at": 1583133000000,
           "author": "icellusedkars",
-          "created_at": 1583133000000
+          "body": "Is this someone's idea of a joke? It's political correctness gone mad, I tell you!"
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Adds a comment to the specified article and serves up the posted comment",
+    "queries": [],
+    "exampleBody": {
+      "username": "icellusedkars",
+      "body": "I've never seen anything like it, really. It really boggles the mind!"
+    },
+    "exampleResponse": {
+      "postedComment": {
+        "comment_id": 45,
+        "votes": 0,
+        "created_at": 1763123000000,
+        "author": "icellusedkars",
+        "body": "I've never seen anything like it, really. It really boggles the mind!"
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "Adjusts the 'vote' property of the specified article by a set amount (can be negative) and serves up the updated article",
+    "queries": [],
+    "exampleBody": {
+      "inc_votes": -1
+    },
+    "exampleOutput": {
+      "article": {
+        "article_id": 1,
+        "title": "Is the trusty red Corsa making a comeback?",
+        "topic": "cars",
+        "author": "aboynamedsue",
+        "body": "Text from the article..",
+        "created_at": 1527695953341,
+        "votes": 34,
+        "comment_count": 13
+      }
+    }
+
   }
 }

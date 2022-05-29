@@ -358,9 +358,9 @@ describe(`PATCH /api/articles/:article_id`, () => {
             .send(validBody)
             .expect(200)
             .then(({ body }) => {
-                const { article } = body;
-                expect(article).toBeInstanceOf(Object);
-                expect(article).toEqual(expect.objectContaining({
+                const { updatedArticle } = body;
+                expect(updatedArticle).toBeInstanceOf(Object);
+                expect(updatedArticle).toEqual(expect.objectContaining({
                     author: expect.any(String),
                     title: expect.any(String),
                     article_id: expect.any(Number),

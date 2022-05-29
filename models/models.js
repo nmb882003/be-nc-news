@@ -68,8 +68,9 @@ exports.extractArticleById = (article_id) => {
             else return Promise.reject({ errStatus: 404, msg: "Article not found" });
         });
 };
+
 exports.extractArticleCommentsById = (article_id) => {
-    return db.query(`SELECT * FROM comments WHERE article_id = $1`, [article_id])
+    return db.query(`SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1`, [article_id])
 
         .then(({ rows }) => {
             if (rows.length) {
@@ -80,7 +81,6 @@ exports.extractArticleCommentsById = (article_id) => {
 };
 
 exports.extractEndpointData = () => {
-
 
 
 }
