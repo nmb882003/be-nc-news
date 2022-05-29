@@ -422,7 +422,7 @@ describe(`DELETE /api/comments/:comment_id`, () => {
     })
     test(`status: 400, resonds with an error message when an invalid parametric endpoint is used`, () => {
         return request(app)
-        .delete(`/api/comments/banana`)
+        .delete(`/api/comments/bananas`)
         .expect(400)
         .then(({body}) => {
             expect(body.msg).toEqual("Invalid request");
