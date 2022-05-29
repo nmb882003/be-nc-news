@@ -6,36 +6,10 @@ exports.getTopics = (req, res, next) => {
     .then(topicsArray => res.status(200).send({topicsArray}))
 };
 
-exports.getArticleById = (req, res, next) => {
-    const {article_id} = req.params;
-    extractArticleById(article_id)
-
-    .then(article => {
-        return res.status(200).send({article});
-    })
-    .catch(next);
-};
-
 exports.getUsers = (req, res, next) => {
     extractUsers()
 
     .then(usersArray => res.status(200).send({usersArray}))
-};
-
-exports.getInvalidPath = (req, res, next) => {
-    res.status(404).send({ msg: "Route does not exist" });
-};
-
-exports.patchArticleVotesById = (req, res, next) => {
-    const {article_id} = req.params;
-    const {body} = req;
-
-    updateArticleVotesById(article_id, body)
-
-    .then(article => {
-        return res.status(200).send({article});
-    })
-    .catch(next);
 };
 
 exports.getArticles = (req, res, next) => {
@@ -43,6 +17,16 @@ exports.getArticles = (req, res, next) => {
 
     .then(articlesArray => {
         res.status(200).send({articlesArray});
+    })
+    .catch(next);
+};
+
+exports.getArticleById = (req, res, next) => {
+    const {article_id} = req.params;
+    extractArticleById(article_id)
+
+    .then(article => {
+        return res.status(200).send({article});
     })
     .catch(next);
 };
@@ -64,6 +48,10 @@ exports.getEndpointData = (req, res, next) => {
     .then(data => console.log(data));
 }
 
+exports.getInvalidPath = (req, res, next) => {
+    res.status(404).send({ msg: "Route does not exist" });
+};
+
 exports.postArticleCommentById = (req, res, next) => {
     const {article_id} = req.params;
     const {body} = req;
@@ -74,6 +62,18 @@ exports.postArticleCommentById = (req, res, next) => {
         res.status(201).send({ postedComment });
     })
     .catch(next)
+};
+
+exports.patchArticleVotesById = (req, res, next) => {
+    const {article_id} = req.params;
+    const {body} = req;
+
+    updateArticleVotesById(article_id, body)
+
+    .then(article => {
+        res.status(200).send({article});
+    })
+    .catch(next);
 };
 
 exports.deleteCommentById = (req, res, next) => {

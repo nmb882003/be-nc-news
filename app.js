@@ -7,11 +7,11 @@ app.use(express.json());
 
 app.get('/api/topics', getTopics);
 
-app.get(`/api/articles/:article_id`, getArticleById);
-
 app.get(`/api/users`, getUsers);
 
 app.get(`/api/articles`, getArticles);
+
+app.get(`/api/articles/:article_id`, getArticleById);
 
 app.get(`/api/articles/:article_id/comments`, getArticleCommentsById);
 
@@ -19,9 +19,9 @@ app.get(`/api`, getEndpointData);
 
 app.get(`/*`, getInvalidPath);
 
-app.patch(`/api/articles/:article_id`, patchArticleVotesById);
-
 app.post(`/api/articles/:article_id/comments`, postArticleCommentById);
+
+app.patch(`/api/articles/:article_id`, patchArticleVotesById);
 
 app.delete(`/api/comments/:comment_id`, deleteCommentById);
 
