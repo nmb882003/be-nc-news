@@ -1,5 +1,6 @@
 const db = require('../db/connection.js');
 const format = require("pg-format");
+const { readFile } = require("fs/promises");
 
 exports.extractTopics = () => {
     return db.query(`SELECT * FROM topics;`)
@@ -81,8 +82,9 @@ exports.extractArticleCommentsById = (article_id) => {
 };
 
 exports.extractEndpointData = () => {
+    return readFile(`./endpoints.json`, `utf8`)
 
-
+        .then(fileData => JSON.parse(fileData));
 }
 
 exports.insertArticleCommentById = (article_id, body) => {

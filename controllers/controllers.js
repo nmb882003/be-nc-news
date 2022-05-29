@@ -45,7 +45,10 @@ exports.getArticleCommentsById = (req, res, next) => {
 exports.getEndpointData = (req, res, next) => {
     extractEndpointData()
 
-        .then(data => console.log(data));
+        .then(endpointsMap => {
+            res.status(200).send({ endpointsMap });
+        })
+        .catch(next);
 }
 
 exports.getInvalidPath = (req, res, next) => {

@@ -15,7 +15,7 @@
     }
   },
   "GET /api/users": {
-    "description": "serves up an array of usernames for all users",
+    "description": "serves an array of usernames for all users",
     "queries": [],
     "exampleResponse": {
       "users": [
@@ -39,7 +39,7 @@
           "title": "Is the trusty red Corsa making a comeback?",
           "topic": "cars",
           "author": "aboynamedsue",
-          "body": "Text from the article..",
+          "body": "Text from the article",
           "created_at": 1527695953341,
           "votes": 4,
           "comment_count": 13
@@ -48,7 +48,7 @@
     }
   },
   "GET /api/articles/:article_id": {
-    "description": "Serves a single article",
+    "description": "Serves up a single article",
     "queries": [],
     "exampleResponse": {
       "article": {
@@ -56,7 +56,7 @@
         "title": "Is the trusty red Corsa making a comeback?",
         "topic": "cars",
         "author": "aboynamedsue",
-        "body": "Text from the article..",
+        "body": "Text from the article",
         "created_at": 1527695953341,
         "votes": 34,
         "comment_count": 13
@@ -64,7 +64,7 @@
     }
   },
   "GET /api/articles/:article_id/comments": {
-    "description": "Serves up an array of all comments for a specified article",
+    "description": "Serves an array of all comments for a specified article",
     "queries": [],
     "exampleResponse": {
       "comments": [
@@ -79,11 +79,11 @@
     }
   },
   "POST /api/articles/:article_id/comments": {
-    "description": "Adds a comment to the specified article and serves up the posted comment",
+    "description": "Adds a comment for the specified article and serves up the posted comment",
     "queries": [],
     "exampleBody": {
       "username": "icellusedkars",
-      "body": "I've never seen anything like it, really. It really boggles the mind!"
+      "body": "I've never seen anything like it. It really boggles the mind!"
     },
     "exampleResponse": {
       "postedComment": {
@@ -91,7 +91,7 @@
         "votes": 0,
         "created_at": 1763123000000,
         "author": "icellusedkars",
-        "body": "I've never seen anything like it, really. It really boggles the mind!"
+        "body": "I've never seen anything like it. It really boggles the mind!"
       }
     }
   },
@@ -107,12 +107,16 @@
         "title": "Is the trusty red Corsa making a comeback?",
         "topic": "cars",
         "author": "aboynamedsue",
-        "body": "Text from the article..",
+        "body": "Text from the article",
         "created_at": 1527695953341,
-        "votes": 34,
+        "votes": 33,
         "comment_count": 13
       }
     }
-
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes the specified comment, returns an empty body",
+    "queries": [],
+    "exampleOutput": {}
   }
 }

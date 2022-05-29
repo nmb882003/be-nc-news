@@ -9,6 +9,18 @@ beforeEach(() => seed(testData))
 
 afterAll(() => db.end());
 
+describe(`GET /api`, () => {
+    test(`Status: 200, responds with a JSON object describing all of the available endpoints on the API`, () => {
+        return request(app)
+        .get(`/api`)
+        .expect(200)
+        .then(({body}) => {
+            const { endpointsMap } = body;
+            expect(endpointsMap).toBeInstanceOf(Object);
+        })
+    })
+})
+
 describe(`GET /api/topics`, () => {
     test(`Status:200, responds with an array of topic objects, each with 'slug' and 'description' properties`, () => {
         return request(app)
