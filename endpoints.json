@@ -10,8 +10,8 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "serves an array of all articles",
+    "queries": ["topic", "sort_by", "order"],
     "exampleResponse": {
       "articles": [
         {
@@ -19,9 +19,17 @@
           "topic": "cooking",
           "author": "weegembump",
           "body": "Text from the article..",
-          "created_at": 1527695953341
+          "created_at": 1527695953341,
+          "votes": 150
         }
       ]
+    }
+  },
+  "GET /api/articles/:article_id" : {
+    "description": "Serves up a single article",
+    "queries": [],
+    "exampleResponse": {
+      
     }
   }
 }
