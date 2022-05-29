@@ -59,7 +59,7 @@ exports.getArticleCommentsById = (req, res, next) => {
 };
 
 exports.getEndpointData = (req, res, next) => {
-    extractEndpointMap()
+    extractEndpointData()
 
     .then(data => console.log(data));
 }

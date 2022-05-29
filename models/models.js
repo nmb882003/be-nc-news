@@ -91,7 +91,7 @@ exports.extractArticleCommentsById = (article_id) => {
 exports.extractEndpointData = () => {
 
 
-    
+
 }
 
 exports.insertArticleCommentById = (article_id, body) => {
@@ -103,8 +103,7 @@ exports.insertArticleCommentById = (article_id, body) => {
     const queryString = format(`INSERT INTO comments (body, article_id, author, votes, created_at) VALUES (%L) RETURNING *;`, toBeInserted);
 
     return db.query(queryString)
-
-    .then(({ rows }) => rows[0])
+        .then(({ rows }) => rows[0])
 };
 
 exports.removeCommentById = (comment_id) => {
