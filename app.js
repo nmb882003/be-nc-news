@@ -1,4 +1,4 @@
-const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers, getArticles, getArticleCommentsById, postArticleCommentById, deleteCommentById } = require(`./controllers/controllers.js`);
+const { getTopics, getArticleById, getInvalidPath, patchArticleVotesById, getUsers, getArticles, getArticleCommentsById, postArticleCommentById, deleteCommentById, getEndpointData } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
@@ -14,6 +14,8 @@ app.get(`/api/users`, getUsers);
 app.get(`/api/articles`, getArticles);
 
 app.get(`/api/articles/:article_id/comments`, getArticleCommentsById);
+
+app.get(`/api`, getEndpointData);
 
 app.get(`/*`, getInvalidPath);
 

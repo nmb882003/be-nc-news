@@ -88,6 +88,12 @@ exports.extractArticleCommentsById = (article_id) => {
         });
 };
 
+exports.extractEndpointData = () => {
+
+
+    
+}
+
 exports.insertArticleCommentById = (article_id, body) => {
     const { post, username } = body;
 

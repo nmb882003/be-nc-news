@@ -1,4 +1,4 @@
-const { extractTopics, extractArticleById, updateArticleVotesById, extractUsers, extractArticles, extractArticleCommentsById, insertArticleCommentById, removeCommentById } = require(`../models/models.js`);
+const { extractTopics, extractArticleById, updateArticleVotesById, extractUsers, extractArticles, extractArticleCommentsById, insertArticleCommentById, removeCommentById, extractEndpointData } = require(`../models/models.js`);
 
 exports.getTopics = (req, res, next) => {
     extractTopics()
@@ -57,6 +57,12 @@ exports.getArticleCommentsById = (req, res, next) => {
     })
     .catch(next);
 };
+
+exports.getEndpointData = (req, res, next) => {
+    extractEndpointMap()
+
+    .then(data => console.log(data));
+}
 
 exports.postArticleCommentById = (req, res, next) => {
     const {article_id} = req.params;
