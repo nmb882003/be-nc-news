@@ -6,41 +6,76 @@
     "description": "serves an array of all topics",
     "queries": [],
     "exampleResponse": {
-      "topics": [{ "slug": "football", "description": "Footie!" }]
-    }
-  },
-  "GET /api/articles": {
-    "description": "serves an array of all articles",
-    "queries": ["topic", "sort_by", "order"],
-    "exampleResponse": {
-      "articles": [
+      "topics": [
         {
-          "article_id": "",
-          "title": "Seafood substitutions are increasing",
-          "topic": "cooking",
-          "author": "weegembump",
-          "body": "Text from the article..",
-          "created_at": 1527695953341,
-          "votes": 150,
-          "comment_count": 35
+          "slug": "football",
+          "description": "Footie!"
         }
       ]
     }
   },
-  "GET /api/articles/:article_id" : {
+  "GET /api/users": {
+    "description": "serves up an array of usernames for all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "pikachu2003"
+        }
+      ]
+    }
+  },
+  "GET /api/articles": {
+    "description": "serves an array of all articles",
+    "queries": [
+      "topic",
+      "sort_by",
+      "order"
+    ],
+    "exampleResponse": {
+      "articles": [
+        {
+          "article_id": "1",
+          "title": "Is the trusty red Corsa making a comeback?",
+          "topic": "cars",
+          "author": "aboynamedsue",
+          "body": "Text from the article..",
+          "created_at": 1527695953341,
+          "votes": 4,
+          "comment_count": 13
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:article_id": {
     "description": "Serves a single article",
     "queries": [],
     "exampleResponse": {
       "article": {
-        "article_id": "",
-        "title": "Seafood substitutions are increasing",
-        "topic": "cooking",
-        "author": "weegembump",
+        "article_id": 1,
+        "title": "Is the trusty red Corsa making a comeback?",
+        "topic": "cars",
+        "author": "aboynamedsue",
         "body": "Text from the article..",
         "created_at": 1527695953341,
-        "votes": 150,
-        "comment_count": 35 
+        "votes": 4,
+        "comment_count": 13
       }
+    }
+  },
+  "GET /api/articles/:article_id/comments": {
+    "description": "Serves up an array of all comments for a specified article",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 32,
+          "body": "Is this someone's idea of a joke? It's political correctness gone mad, I tell you!",
+          "votes": 0,
+          "author": "icellusedkars",
+          "created_at": 1583133000000
+        }
+      ]
     }
   }
 }
