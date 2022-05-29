@@ -72,7 +72,7 @@ describe(`GET /api/articles/:article_id`, () => {
         .get(`/api/articles/333`)
         .expect(404)
         .then(({ body }) => {
-            expect(body.msg).toBe('Entry not found');
+            expect(body.msg).toBe('Article not found');
         })
     });
 });
@@ -239,7 +239,7 @@ describe(`GET /api/articles/:article_id/comments`, () => {
             .get(`/api/articles/333/comments`)
             .expect(404)
             .then(({body}) => {
-                expect(body.msg).toBe(`Entry not found`);
+                expect(body.msg).toBe(`Article not found`);
             });
     })
 })
@@ -294,7 +294,7 @@ describe(`PATCH /api/articles/:article_id`, () => {
         .send(validBody)
         .expect(404)
         .then(({ body }) => {
-            expect(body.msg).toBe('Entry not found');
+            expect(body.msg).toBe('Article not found');
         })
     });
     test(`status: 400, responds with an error message when passed an object without a 'inc_votes' property`, () => {
@@ -388,12 +388,13 @@ describe(`POST /api/articles/:article_id/comments`, () => {
         .send(invalidBody5)
         .expect(400)
         .then(({ body }) => {
-            expect(body.msg).toBe('Invalid - username not found');
+            expect(body.msg).toBe('Invalid request - username not found');
         })
     });
     test(`status: 400, responds with an error message when passed an invalid parametric endpoint`, () => {
         return request(app)
         .post(`/api/articles/bananas/comments`)
+        .send(validBody)
         .expect(400)
         .then(({body}) => {
             expect(body.msg).toBe('Invalid request');
@@ -402,9 +403,10 @@ describe(`POST /api/articles/:article_id/comments`, () => {
     test(`status: 404, responds with an error message when passed a valid endpoint where the resource doesn't exist`, () => {
         return request(app)
         .post(`/api/articles/222/comments`)
-        .expect(400)
+        .send(validBody)
+        .expect(404)
         .then(({body}) => {
-            expect(body.msg).toBe('Invalid request');
+            expect(body.msg).toBe('Article not found');
         })
     })
 })
@@ -418,9 +420,20 @@ describe(`DELETE /api/comments/:comment_id`, () => {
             expect(body).toEqual({});
         })
     })
-    // test(`status: 400, resonds with an error message when an invalid parametric endpoint is used`, () => {
-
-
-
-    // })
+    test(`status: 400, resonds with an error message when an invalid parametric endpoint is used`, () => {
+        return request(app)
+        .delete(`/api/comments/banana`)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toEqual("Invalid request");
+        })
+    })
+    test(`status: 404, responds with an error when passed a comment_id that doesn't exist`, () => {
+        return request(app)
+        .delete(`/api/comments/333`)
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toEqual("Comment not found")
+        })
+    })
 })
