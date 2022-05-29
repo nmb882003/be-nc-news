@@ -15,21 +15,32 @@
     "exampleResponse": {
       "articles": [
         {
+          "article_id": "",
           "title": "Seafood substitutions are increasing",
           "topic": "cooking",
           "author": "weegembump",
           "body": "Text from the article..",
           "created_at": 1527695953341,
-          "votes": 150
+          "votes": 150,
+          "comment_count": 35
         }
       ]
     }
   },
   "GET /api/articles/:article_id" : {
-    "description": "Serves up a single article",
+    "description": "Serves a single article",
     "queries": [],
     "exampleResponse": {
-      
+      "article": {
+        "article_id": "",
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": 1527695953341,
+        "votes": 150,
+        "comment_count": 35 
+      }
     }
   }
 }
