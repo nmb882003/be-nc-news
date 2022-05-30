@@ -39,7 +39,6 @@
           "title": "Is the trusty red Corsa making a comeback?",
           "topic": "cars",
           "author": "aboynamedsue",
-          "body": "Text from the article",
           "created_at": 1527695953341,
           "votes": 4,
           "comment_count": 13
@@ -88,10 +87,11 @@
     "exampleResponse": {
       "postedComment": {
         "comment_id": 45,
-        "votes": 0,
-        "created_at": 1763123000000,
+        "body": "I've never seen anything like it. It really boggles the mind!",
+        "article_id": 12,
         "author": "icellusedkars",
-        "body": "I've never seen anything like it. It really boggles the mind!"
+        "votes": 0,
+        "created_at": 1763123000000
       }
     }
   },
