@@ -1,28 +1,10 @@
 const db = require('../db/connection.js');
 const format = require("pg-format");
+const { readFile } = require("fs/promises");
 
 exports.extractTopics = () => {
     return db.query(`SELECT * FROM topics;`)
         .then(({ rows }) => rows);
-};
-
-exports.extractArticleById = (article_id) => {
-    return db.query(`SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id  WHERE articles.article_id = $1 GROUP BY articles.article_id;`, [article_id])
-
-        .then(({ rows }) => {
-            if (rows.length) {
-                return rows[0];
-            }
-            else return Promise.reject({ errStatus: 404, msg: "Article not found" });
-        });
-};
-
-exports.updateArticleVotesById = (article_id, body) => {
-    return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`, [body.inc_votes, article_id])
-        .then(({ rows }) => {
-            if (rows.length) return rows[0];
-            else return Promise.reject({ errStatus: 404, msg: "Article not found" });
-        });
 };
 
 exports.extractUsers = () => {
@@ -77,8 +59,19 @@ exports.extractArticles = (queries) => {
         });
 };
 
+exports.extractArticleById = (article_id) => {
+    return db.query(`SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id  WHERE articles.article_id = $1 GROUP BY articles.article_id;`, [article_id])
+
+        .then(({ rows }) => {
+            if (rows.length) {
+                return rows[0];
+            }
+            else return Promise.reject({ errStatus: 404, msg: "Article not found" });
+        });
+};
+
 exports.extractArticleCommentsById = (article_id) => {
-    return db.query(`SELECT * FROM comments WHERE article_id = $1`, [article_id])
+    return db.query(`SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1`, [article_id])
 
         .then(({ rows }) => {
             if (rows.length) {
@@ -87,6 +80,12 @@ exports.extractArticleCommentsById = (article_id) => {
             else return Promise.reject({ errStatus: 404, msg: "Article not found" });
         });
 };
+
+exports.extractEndpointData = () => {
+    return readFile(`./endpoints.json`, `utf8`)
+
+        .then(fileData => JSON.parse(fileData));
+}
 
 exports.insertArticleCommentById = (article_id, body) => {
     const { post, username } = body;
@@ -97,8 +96,15 @@ exports.insertArticleCommentById = (article_id, body) => {
     const queryString = format(`INSERT INTO comments (body, article_id, author, votes, created_at) VALUES (%L) RETURNING *;`, toBeInserted);
 
     return db.query(queryString)
+        .then(({ rows }) => rows[0])
+};
 
-    .then(({ rows }) => rows[0])
+exports.updateArticleVotesById = (article_id, body) => {
+    return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`, [body.inc_votes, article_id])
+        .then(({ rows }) => {
+            if (rows.length) return rows[0];
+            else return Promise.reject({ errStatus: 404, msg: "Article not found" });
+        });
 };
 
 exports.removeCommentById = (comment_id) => {
