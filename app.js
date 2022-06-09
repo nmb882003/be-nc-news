@@ -51,10 +51,5 @@ app.use((err, req, res, next) => {
     res.status(500).send({ msg: 'Internal server error' });
 });
 
-/*
-app.listen(8080, () => {
-    console.log(`Listening on port 8080`);
-});
-*/
 
 module.exports = app;
