@@ -1,4 +1,4 @@
-const { getTopics, getUsers,getArticles, getArticleById,     getArticleCommentsById,getEndpointData, getInvalidPath, postArticleCommentById,patchArticleVotesById, deleteCommentById,  } = require(`./controllers/controllers.js`);
+const { getTopics, getUsers,getArticles, getArticleById, getArticleCommentsById,getEndpointData, getInvalidPath, postArticleCommentById,patchArticleVotesById, deleteCommentById } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
