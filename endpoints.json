@@ -26,7 +26,7 @@
     }
   },
   "GET /api/articles": {
-    "description": "serves an array of all articles",
+    "description": "serves an array of stubs for all articles",
     "queries": [
       "topic",
       "sort_by",
@@ -101,7 +101,7 @@
     "exampleBody": {
       "inc_votes": -1
     },
-    "exampleOutput": {
+    "exampleResponse": {
       "article": {
         "article_id": 1,
         "title": "Is the trusty red Corsa making a comeback?",
