@@ -1,4 +1,4 @@
-const { getTopics, getUsers, getArticleById, getArticleCommentsById, getInvalidPath, postArticleCommentById,patchArticleVotesById, deleteCommentById } = require(`./controllers/controllers.js`);
+const { getInvalidPath, postArticleCommentById,patchArticleVotesById, deleteCommentById } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
@@ -7,19 +7,8 @@ const apiRouter = require('./routes/api-router.js');
 
 app.use(cors());
 app.use(express.json());
+
 app.use('/api', apiRouter);
-
-//app.get('/api/topics', getTopics);
-
-app.get(`/api/users`, getUsers);
-
-//app.get(`/api/articles`, getArticles);
-
-app.get(`/api/articles/:article_id`, getArticleById);
-
-app.get(`/api/articles/:article_id/comments`, getArticleCommentsById);
-
-//app.get(`/api`, getEndpointData);
 
 app.get(`/*`, getInvalidPath);
 
