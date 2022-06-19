@@ -2,9 +2,11 @@
 
 ## About
 
-This is a web API serving news articles, built using the [Express](https://expressjs.com/) web framework. It is designed to mimic the structure of a real-world back-end service, such as Reddit. The project can be found at: https://dashboard.heroku.com/apps/neilb-nc-news-server.
+This is a web API serving news articles. It was built using the [Express](https://expressjs.com/) web framework and is designed to mimic the structure of a real-world back-end service, such as Reddit. 
 
-The `endpoints.json` file in the root directory provides a map of all the endpoints exposed by the API. 
+The `endpoints.json` file in the root directory provides a map of all endpoints exposed by the API.
+
+A Heroku hosted version of this project can be found at: https://neilb-nc-news-server.herokuapp.com/api.
 
 ---
 
@@ -37,6 +39,8 @@ Your .env files should each contain the following code:
 
 ## Seeding the database
 
+
+
 ---
 
 ## Testing
@@ -51,5 +55,5 @@ Test files can be found in the `__tests__`  directory.
 
 This project requires that you have at least the following minimum versions of PostgreSQL and Node.js installed:
 
-postgres 12.11
-node 17.8
+    PostgreSQL v12.11
+    Node.js v17.8
