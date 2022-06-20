@@ -1,4 +1,4 @@
-const { getInvalidPath } = require(`./controllers/controllers.js`);
+const { getInvalidPath, getUserByUsername } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
@@ -12,6 +12,8 @@ app.use(express.json());
 app.use('/api', apiRouter);
 
 app.get(`/*`, getInvalidPath);
+
+
 
 app.use((err, req, res, next) => {
     if (err.code === '22P02' || err.code === '23502') {

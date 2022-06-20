@@ -1,4 +1,4 @@
-const { extractTopics, extractUsers, extractArticles, extractArticleById, extractArticleCommentsById, extractEndpointData, insertArticleCommentById, updateArticleVotesById, removeCommentById } = require(`../models/models.js`);
+const { extractTopics, extractUsers, extractUserByUsername, extractArticles, extractArticleById, extractArticleCommentsById, extractEndpointData, insertArticleCommentById, updateArticleVotesById, removeCommentById } = require(`../models/models.js`);
 
 exports.getTopics = (req, res, next) => {
     extractTopics()
@@ -11,6 +11,14 @@ exports.getUsers = (req, res, next) => {
 
         .then(users => res.status(200).send({ users }))
 };
+
+exports.getUserByUsername = (req, res, next) => {
+    const { username } = req.params;
+    extractUserByUsername(username)
+
+    .then(user => res.status(200).send({ user }))
+    .catch(next);
+}
 
 exports.getArticles = (req, res, next) => {
     extractArticles(req.query)
@@ -26,7 +34,7 @@ exports.getArticleById = (req, res, next) => {
     extractArticleById(article_id)
 
         .then(article => {
-            return res.status(200).send({ article });
+            res.status(200).send({ article });
         })
         .catch(next);
 };
