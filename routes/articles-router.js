@@ -1,12 +1,14 @@
-const { getArticles, getArticleById, getArticleCommentsById } = require('../controllers/controllers.js');
-
+const { getArticles, getArticleById, getArticleCommentsById, postArticleCommentById, patchArticleVotesById } = require('../controllers/controllers.js');
 const articlesRouter = require('express').Router();
-const commentsRouter = require('./comments-router.js');
 
 articlesRouter.get('/', getArticles);
 
 articlesRouter.get('/:article_id', getArticleById);
 
+articlesRouter.patch('/:article_id/', patchArticleVotesById);
+
 articlesRouter.get('/:article_id/comments', getArticleCommentsById);
+
+articlesRouter.post('/:article_id/comments', postArticleCommentById);
 
 module.exports = articlesRouter;

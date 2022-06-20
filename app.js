@@ -1,7 +1,8 @@
-const { getInvalidPath, postArticleCommentById,patchArticleVotesById, deleteCommentById } = require(`./controllers/controllers.js`);
+const { getInvalidPath } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
+
 const cors = require('cors');
 const apiRouter = require('./routes/api-router.js');
 
@@ -11,12 +12,6 @@ app.use(express.json());
 app.use('/api', apiRouter);
 
 app.get(`/*`, getInvalidPath);
-
-app.post(`/api/articles/:article_id/comments`, postArticleCommentById);
-
-app.patch(`/api/articles/:article_id`, patchArticleVotesById);
-
-app.delete(`/api/comments/:comment_id`, deleteCommentById);
 
 app.use((err, req, res, next) => {
     if (err.code === '22P02' || err.code === '23502') {
@@ -40,9 +35,8 @@ app.use((err, req, res, next) => {
 
 app.use((err, req, res, next) => {
     console.log(err);
-    
+
     res.status(500).send({ msg: 'Internal server error' });
 });
-
 
 module.exports = app;
