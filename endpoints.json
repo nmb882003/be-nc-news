@@ -25,6 +25,17 @@
       ]
     }
   },
+  "GET /api/users/:username": {
+    "description": "serves up a user object for a given username",
+    "queries": [],
+    "exampleResponse": {
+      "user": {
+        "username": "butter_bridge",
+        "name": "jonny",
+        "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+      }
+    }
+  },
   "GET /api/articles": {
     "description": "serves an array of stubs for all articles",
     "queries": [
@@ -117,6 +128,6 @@
   "DELETE /api/comments/:comment_id": {
     "description": "deletes the specified comment, returns an empty body",
     "queries": [],
-    "exampleOutput": {}
+    "exampleResponse": {}
   }
 }
