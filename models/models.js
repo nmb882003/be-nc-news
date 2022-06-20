@@ -123,6 +123,10 @@ exports.updateArticleVotesById = (article_id, body) => {
         });
 };
 
+exports.patchCommentVotesById = (req, res, next) => {
+    
+}
+
 exports.removeCommentById = (comment_id) => {
     return db.query(`DELETE FROM comments WHERE comment_id = $1;`, [comment_id])
 

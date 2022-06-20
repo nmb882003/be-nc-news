@@ -87,6 +87,15 @@ exports.patchArticleVotesById = (req, res, next) => {
         .catch(next);
 };
 
+exports.patchCommentVotesById = (req, res, next) => {
+    const { comment_id } = req.params;
+    const { body } = req;
+
+    updateCommentVotesById()
+
+        .then(data => console.log(data));
+}
+
 exports.deleteCommentById = (req, res, next) => {
     const { comment_id } = req.params;
 

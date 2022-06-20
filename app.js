@@ -13,8 +13,6 @@ app.use('/api', apiRouter);
 
 app.get(`/*`, getInvalidPath);
 
-
-
 app.use((err, req, res, next) => {
     if (err.code === '22P02' || err.code === '23502') {
         res.status(400).send({ msg: 'Invalid request' });
