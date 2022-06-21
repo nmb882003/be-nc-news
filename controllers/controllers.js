@@ -1,4 +1,4 @@
-const { extractTopics, extractUsers, extractUserByUsername, extractArticles, extractArticleById, extractArticleCommentsById, extractEndpointData, insertArticleCommentById, updateArticleVotesById, removeCommentById } = require(`../models/models.js`);
+const { extractTopics, extractUsers, extractUserByUsername, extractArticles, extractArticleById, extractArticleCommentsById, extractEndpointData, insertArticleCommentById, updateArticleVotesById, updateCommentVotesById, removeCommentById } = require(`../models/models.js`);
 
 exports.getTopics = (req, res, next) => {
     extractTopics()
@@ -91,9 +91,12 @@ exports.patchCommentVotesById = (req, res, next) => {
     const { comment_id } = req.params;
     const { body } = req;
 
-    updateCommentVotesById()
+    updateCommentVotesById(comment_id, body)
 
-        .then(data => console.log(data));
+        .then(updatedComment => {
+            res.status(200).send({ updatedComment });
+        })
+        .catch(next);
 }
 
 exports.deleteCommentById = (req, res, next) => {
