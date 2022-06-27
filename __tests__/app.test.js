@@ -293,6 +293,86 @@ describe(`GET /*`, () => {
     });
 });
 
+describe('POST /api/articles', () => {
+    const validBody = {
+        author: 'icellusedkars',
+        title: 'This is a cool title',
+        body: 'This is the most interesting article you will ever read.',
+        topic: 'paper'
+    };
+
+    const invalidBody = {
+        author: 'icellusedkars',
+        title: 'The Mystery of the Missing Body',
+        topic: 'paper'
+    };
+
+    const invalidBody2 = {
+        author: 'icellusedkars',
+        title: 3454432,
+        body: 'The humble title\'s days are numbered, in my opinion',
+        topic: 'paper'
+    }
+
+    const invalidBody3 = {
+        author: 'ismelluserkars',
+        title: 'The Banana Stand',
+        body: 'There is always money in the banana stand, or SO THEY WANT YOU TO THINK!!',
+        topic: 'paper'
+    }
+
+    test('status: 201, responds with the posted article', () => {
+        return request(app)
+        .post('/api/articles')
+        .send(validBody)
+        .expect(201)
+        .then(({body}) => {
+            const { postedArticle } = body;
+            expect(postedArticle).toBeInstanceOf(Object);
+            expect(postedArticle).toEqual(expect.objectContaining({
+                author: expect.any(String),
+                title: expect.any(String),
+                body: expect.any(String),
+                topic: expect.any(String),
+                article_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                comment_count: expect.any(Number)
+            }))
+        })
+    })
+
+    test(`status: 400, responds with an error message if body is missing either 'author', 'title', 'body' or 'topic' properties`, () => {
+        return request(app)
+        .post('/api/articles')
+        .send(invalidBody)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Invalid request");
+        })
+    })
+
+    test(`status: 400, responds with an error message when passed a body in which 'author', 'title', 'body' or 'topic' properties are not a string`, () => {
+        return request(app)
+        .post('/api/articles')
+        .send(invalidBody2)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Invalid request");
+        })
+    })
+
+    test(`status: 400, responds with an error message when passed a body in which 'author' property is not an existing user`, () => {
+        return request(app)
+        .post('/api/articles')
+        .send(invalidBody3)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Invalid request - author not found in users");
+        })
+    })
+})
+
 describe(`POST /api/articles/:article_id/comments`, () => {
 
     const validBody = { username: "butter_bridge", post: "I'm outraged by this! It's political correctness gone mad, I tell you!" };

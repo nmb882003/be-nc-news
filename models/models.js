@@ -103,6 +103,23 @@ exports.extractEndpointData = () => {
         .then(fileData => JSON.parse(fileData));
 }
 
+exports.insertArticle = (bodyObj) => {
+    const { author, title, body, topic } = bodyObj;
+
+    if (typeof author !== "string" || typeof title !== "string" || typeof body !== "string" || typeof topic !== "string") {
+        return Promise.reject({ errStatus: 400, msg: "Invalid request"});
+    }
+
+    const toBeInserted = [title, topic, author, body];
+    const queryString = format(`INSERT INTO articles (title, topic, author, body) VALUES (%L) RETURNING *;`, toBeInserted);
+
+    return db.query(queryString)
+        .then(({rows}) => {
+            rows[0].comment_count = 0;
+            return rows[0]
+        })
+}
+
 exports.insertArticleCommentById = (article_id, body) => {
     const { post, username } = body;
 

@@ -106,6 +106,20 @@
       }
     }
   },
+  "POST /api/articles": {
+    "description": "Adds an article and serves up the posted article",
+    "queries": [],
+    "exampleBody": {
+      "author": "icellusedkars",
+      "title": "Who knew?",
+      "body": "More tea, vicar?",
+      "topic": "cars",
+      "article_id": 31,
+      "votes": 0,
+      "created_at": 1763123034579,
+      "comment_count": 0
+    }
+  },
   "PATCH /api/articles/:article_id": {
     "description": "Adjusts the 'vote' property of the specified article by a set amount (can be negative) and serves up the updated article",
     "queries": [],

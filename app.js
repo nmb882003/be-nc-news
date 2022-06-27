@@ -1,4 +1,4 @@
-const { getInvalidPath, getUserByUsername } = require(`./controllers/controllers.js`);
+const { getInvalidPath } = require(`./controllers/controllers.js`);
 
 const express = require('express');
 const app = express();
@@ -21,6 +21,8 @@ app.use((err, req, res, next) => {
             res.status(400).send({ msg: 'Invalid request - username not found' });
         } else if (err.constraint === 'comments_article_id_fkey') {
             res.status(404).send({ msg: 'Article not found' });
+        } else if (err.constraint === 'articles_author_fkey') {
+            res.status(400).send({ msg: 'Invalid request - author not found in users'});
         }
     }
     else next(err);

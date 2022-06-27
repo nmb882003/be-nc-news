@@ -1,4 +1,4 @@
-const { extractTopics, extractUsers, extractUserByUsername, extractArticles, extractArticleById, extractArticleCommentsById, extractEndpointData, insertArticleCommentById, updateArticleVotesById, updateCommentVotesById, removeCommentById } = require(`../models/models.js`);
+const { extractTopics, extractUsers, extractUserByUsername, extractArticles, extractArticleById, extractArticleCommentsById, extractEndpointData, insertArticle, insertArticleCommentById, updateArticleVotesById, updateCommentVotesById, removeCommentById } = require(`../models/models.js`);
 
 exports.getTopics = (req, res, next) => {
     extractTopics()
@@ -63,12 +63,21 @@ exports.getInvalidPath = (req, res, next) => {
     res.status(404).send({ msg: "Route does not exist" });
 };
 
+exports.postArticle = (req, res, next) => {
+    const { body } = req;
+
+    insertArticle(body)
+        .then(postedArticle => {
+            res.status(201).send({ postedArticle })
+        })
+        .catch(next)
+}
+
 exports.postArticleCommentById = (req, res, next) => {
     const { article_id } = req.params;
     const { body } = req;
 
     insertArticleCommentById(article_id, body)
-
         .then(postedComment => {
             res.status(201).send({ postedComment });
         })
