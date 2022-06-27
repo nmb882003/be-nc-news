@@ -113,6 +113,12 @@
       "author": "icellusedkars",
       "title": "Who knew?",
       "body": "More tea, vicar?",
+      "topic": "cars"
+    },
+    "exampleResponse": {
+      "author": "icellusedkars",
+      "title": "Who knew?",
+      "body": "More tea, vicar?",
       "topic": "cars",
       "article_id": 31,
       "votes": 0,
