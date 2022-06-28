@@ -22,7 +22,9 @@ app.use((err, req, res, next) => {
         } else if (err.constraint === 'comments_article_id_fkey') {
             res.status(404).send({ msg: 'Article not found' });
         } else if (err.constraint === 'articles_author_fkey') {
-            res.status(400).send({ msg: 'Invalid request - author not found in users'});
+            res.status(400).send({ msg: 'Invalid request - author not found in users' });
+        } else if (err.constraint === 'articles_topic_fkey') {
+            res.status(400).send({ msg: 'Invalid request - topic not found in topics' });
         }
     }
     else next(err);
