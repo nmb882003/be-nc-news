@@ -192,7 +192,7 @@ describe(`GET /api/articles`, () => {
         return request(app)
             .get(`/api/articles`)
             .expect(200)
-            .then(({body}) => {
+            .then(({ body }) => {
                 const { articles } = body;
 
                 articles.forEach(article => {
@@ -202,43 +202,42 @@ describe(`GET /api/articles`, () => {
                 });
             })
     })
-    test(`status: 200, (refactored) accepts a 'limit' query to restrict the number of results returned, defaults to 10`, () => {
+    test(`status: 200, (refactored) accepts a 'p' query that specifys the page at which to start (determined by 'limit'), defaults to 1`, () => {
         return request(app)
-        .get(`/api/articles?limit=8`)
-        .expect(200)
-        .then(({body}) => {
-            const { articles } = body;
-            expect(Array.isArray(articles)).toBe(true);
-            expect(articles).toHaveLength(8);
-        })
+            .get(`/api/articles?p=2`)
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body;
+                expect(Array.isArray(articles)).toBe(true);
+                expect(articles).toHaveLength(2);
+            })
     })
-    test(`status: 200, (refactored) accepts a 'p' query in order to specify the page at which to start (determined by 'limit'), defaults to 1`, () => {
+    test(`status: 200, (refactored) accepts a 'limit' query to restrict the number of articles returned, defaults to 10`, () => {
         return request(app)
-        .get(`/api/articles?p=2`)
-        .expect(200)
-        .then(({body}) => {
-            const { articles } = body;
-            expect(Array.isArray(articles)).toBe(true);
-            expect(articles).toHaveLength(2);
-        })
+            .get(`/api/articles?limit=8`)
+            .expect(200)
+            .then(({ body }) => {
+                const { articles } = body;
+                expect(Array.isArray(articles)).toBe(true);
+                expect(articles).toHaveLength(8);
+            })
     })
     test(`status: 400, (refactored) returns an error message when passed an invalid 'p' query`, () => {
         return request(app)
-        .get(`/api/articles?p=cats`)
-        .expect(400)
-        .then(({body}) => {
-            expect(body.msg).toBe("Invalid pagination: 'p' and 'limit' queries must be numerical values");
-        })
+            .get(`/api/articles?p=cats`)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid pagination: 'p' and 'limit' queries must be numerical values");
+            })
     })
     test(`status: 400, (refactored) returns an error message when passed an invalid 'limit' query`, () => {
         return request(app)
-        .get(`/api/articles?p=2&limit=cats`)
-        .expect(400)
-        .then(({body}) => {
-            expect(body.msg).toBe("Invalid pagination: 'p' and 'limit' queries must be numerical values");
-        })
+            .get(`/api/articles?p=2&limit=cats`)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid pagination: 'p' and 'limit' queries must be numerical values");
+            })
     })
-
 });
 
 describe(`GET /api/articles/:article_id`, () => {
@@ -300,7 +299,7 @@ describe(`GET /api/articles/:article_id/comments`, () => {
                 const { comments } = body;
 
                 expect(Array.isArray(comments));
-                expect(comments).toHaveLength(11);
+                expect(comments).toHaveLength(10);
 
                 comments.forEach(comment => {
                     expect(comment).toEqual(expect.objectContaining({
@@ -326,8 +325,28 @@ describe(`GET /api/articles/:article_id/comments`, () => {
             .get(`/api/articles/333/comments`)
             .expect(404)
             .then(({ body }) => {
-                expect(body.msg).toBe(`Article not found`);
+                expect(body.msg).toBe(`No comments found`);
             });
+    })
+    test(`status: 200, (refactored) accepts a 'limit' query which restricts the number of comments returned, defaults to 10`, () => {
+        return request(app)
+            .get(`/api/articles/1/comments?limit=5`)
+            .expect(200)
+            .then(({ body }) => {
+                const { comments } = body;
+                expect(Array.isArray(comments)).toBe(true);
+                expect(comments.length).toBe(5);
+            })
+    })
+    test(`status: 200, (refactored) accepts a 'p' query that specifies the page at which to start (determined by 'limit'), defaults to 1`, () => {
+        return request(app)
+            .get(`/api/articles/1/comments?p=2`)
+            .expect(200)
+            .then(({body}) => {
+                const { comments } = body;
+                expect(Array.isArray(comments)).toBe(true);
+                expect(comments.length).toBe(1);
+            })
     })
 })
 

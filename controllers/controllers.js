@@ -21,7 +21,8 @@ exports.getUserByUsername = (req, res, next) => {
 }
 
 exports.getArticles = (req, res, next) => {
-    extractArticles(req.query)
+    const queries = req.query;
+    extractArticles(queries)
 
         .then(articles => {
             res.status(200).send({ articles });
@@ -41,8 +42,9 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getArticleCommentsById = (req, res, next) => {
     const { article_id } = req.params;
+    const queries = req.query;
 
-    extractArticleCommentsById(article_id)
+    extractArticleCommentsById(article_id, queries)
 
         .then(comments => {
             res.status(200).send({ comments });

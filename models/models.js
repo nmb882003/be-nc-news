@@ -92,14 +92,16 @@ exports.extractArticleById = (article_id) => {
         });
 };
 
-exports.extractArticleCommentsById = (article_id) => {
+exports.extractArticleCommentsById = (article_id, queries) => {
+    const { p = 1, limit = 10 } = queries;
+
     return db.query(`SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1`, [article_id])
 
         .then(({ rows }) => {
             if (rows.length) {
-                return rows;
+                return rows.slice((parseInt(p)-1) * parseInt(limit), parseInt(p) * parseInt(limit));
             }
-            else return Promise.reject({ errStatus: 404, msg: "Article not found" });
+            else return Promise.reject({ errStatus: 404, msg: "No comments found" });
         });
 };
 
