@@ -39,6 +39,8 @@
   "GET /api/articles": {
     "description": "serves an array of stubs for all articles",
     "queries": [
+      "p",
+      "limit",
       "topic",
       "sort_by",
       "order"

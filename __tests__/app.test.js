@@ -93,9 +93,8 @@ describe(`GET /api/articles`, () => {
             .then(({ body }) => {
                 const { articles } = body;
                 expect(Array.isArray(articles)).toBe(true);
-                expect(articles).toHaveLength(12)
+                expect(articles).toHaveLength(10)
                 expect(articles).toBeSortedBy(`created_at`, { descending: true });
-
                 articles.forEach(article => {
                     expect(article).toEqual(expect.objectContaining({
                         author: expect.any(String),
@@ -109,18 +108,18 @@ describe(`GET /api/articles`, () => {
                 });
             })
     })
-    test(`status: 200, accepts a 'sorted_by' query and responds with an array of article objects sorted by column (defaults to 'created_at')`, () => {
+    test(`status: 200, (refactored) accepts a 'sorted_by' query and responds with an array of article objects sorted by column (defaults to 'created_at')`, () => {
         return request(app)
             .get(`/api/articles?sorted_by=votes`)
             .expect(200)
             .then(({ body }) => {
                 const { articles } = body;
                 expect(Array.isArray(articles)).toBe(true);
-                expect(articles).toHaveLength(12)
+                expect(articles).toHaveLength(10)
                 expect(articles).toBeSortedBy(`votes`, { descending: true });
             })
     })
-    test(`status: 400, responds with an error message when 'sorted_by' query is used with an invalid column name`, () => {
+    test(`status: 400, (refactored) responds with an error message when 'sorted_by' query is used with an invalid column name`, () => {
         return request(app)
             .get(`/api/articles?sorted_by=length`)
             .expect(400)
@@ -128,7 +127,7 @@ describe(`GET /api/articles`, () => {
                 expect(body.msg).toBe(`Invalid sort query: 'length' should be a valid column name`);
             })
     })
-    test(`status: 200, accepts an 'order' query to indicate the sort direction and responds with a sorted array of article objects (defaults to 'desc')`, () => {
+    test(`status: 200, (refactored) accepts an 'order' query to indicate the sort direction and responds with a sorted array of article objects (defaults to 'desc')`, () => {
         return request(app)
             .get(`/api/articles?order=asc`)
             .expect(200)
@@ -136,23 +135,22 @@ describe(`GET /api/articles`, () => {
                 const { articles } = body;
 
                 expect(Array.isArray(articles)).toBe(true);
-                expect(articles).toHaveLength(12)
+                expect(articles).toHaveLength(10)
                 expect(articles).toBeSortedBy(`created_at`, { descending: false });
             })
     })
-    test(`status: 200, accepts multiple queries to  return a sorted array of topics on a particular topic`, () => {
+    test(`status: 200, (refactored) accepts multiple queries in order to return a sorted array of topics on a particular topic`, () => {
         return request(app)
             .get(`/api/articles?sorted_by=author&order=asc&topic=mitch`)
             .expect(200)
             .then(({ body }) => {
                 const { articles } = body;
-
                 expect(Array.isArray(articles)).toBe(true);
-                expect(articles).toHaveLength(11)
+                expect(articles).toHaveLength(10)
                 expect(articles).toBeSortedBy(`author`, { descending: false });
             })
     })
-    test(`status: 400, responds with an error message when 'order' query is used with an invalid sort direction`, () => {
+    test(`status: 400, (refactored) responds with an error message when 'order' query is used with an invalid sort direction`, () => {
         return request(app)
             .get(`/api/articles?order=up`)
             .expect(400)
@@ -160,7 +158,7 @@ describe(`GET /api/articles`, () => {
                 expect(body.msg).toBe(`Invalid order query: should be either 'asc' or 'desc'`);
             })
     })
-    test(`status: 200, accepts a 'topic' query and responds with an array of article objects matching that topic`, () => {
+    test(`status: 200, (refactored) accepts a 'topic' query and responds with an array of article objects matching that topic`, () => {
         return request(app)
             .get(`/api/articles?topic=cats`)
             .expect(200)
@@ -174,7 +172,7 @@ describe(`GET /api/articles`, () => {
                 });
             });
     });
-    test(`status: 400, returns an error message when passed an invalid 'topic' query`, () => {
+    test(`status: 400, (refactored) returns an error message when passed an invalid 'topic' query`, () => {
         return request(app)
             .get(`/api/articles?topic=enneagram`)
             .expect(400)
@@ -182,7 +180,7 @@ describe(`GET /api/articles`, () => {
                 expect(body.msg).toBe(`Invalid topic query: 'enneagram' should be a valid topic category`);
             })
     })
-    test(`status: 404, returns an error message when passed an valid 'topic' query but which has no results`, () => {
+    test(`status: 404, (refactored) returns an error message when passed an valid 'topic' query but which has no results`, () => {
         return request(app)
             .get(`/api/articles?topic=paper`)
             .expect(404)
@@ -190,6 +188,57 @@ describe(`GET /api/articles`, () => {
                 expect(body.msg).toBe(`No articles associated with topic 'paper'`);
             })
     })
+    test(`status: 200, (refactored) responds with an array of article objects also containing a 'total_count' property`, () => {
+        return request(app)
+            .get(`/api/articles`)
+            .expect(200)
+            .then(({body}) => {
+                const { articles } = body;
+
+                articles.forEach(article => {
+                    expect(article).toEqual(expect.objectContaining({
+                        total_count: expect.any(Number)
+                    }));
+                });
+            })
+    })
+    test(`status: 200, (refactored) accepts a 'limit' query to restrict the number of results returned, defaults to 10`, () => {
+        return request(app)
+        .get(`/api/articles?limit=8`)
+        .expect(200)
+        .then(({body}) => {
+            const { articles } = body;
+            expect(Array.isArray(articles)).toBe(true);
+            expect(articles).toHaveLength(8);
+        })
+    })
+    test(`status: 200, (refactored) accepts a 'p' query in order to specify the page at which to start (determined by 'limit'), defaults to 1`, () => {
+        return request(app)
+        .get(`/api/articles?p=2`)
+        .expect(200)
+        .then(({body}) => {
+            const { articles } = body;
+            expect(Array.isArray(articles)).toBe(true);
+            expect(articles).toHaveLength(2);
+        })
+    })
+    test(`status: 400, (refactored) returns an error message when passed an invalid 'p' query`, () => {
+        return request(app)
+        .get(`/api/articles?p=cats`)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Invalid pagination: 'p' and 'limit' queries must be numerical values");
+        })
+    })
+    test(`status: 400, (refactored) returns an error message when passed an invalid 'limit' query`, () => {
+        return request(app)
+        .get(`/api/articles?p=2&limit=cats`)
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Invalid pagination: 'p' and 'limit' queries must be numerical values");
+        })
+    })
+
 });
 
 describe(`GET /api/articles/:article_id`, () => {
@@ -211,7 +260,7 @@ describe(`GET /api/articles/:article_id`, () => {
                 }));
             });
     });
-    test(`status:200, responds with an article object also containing a 'comment_count' property`, () => {
+    test(`status:200, (refactored) responds with an article object also containing a 'comment_count' property`, () => {
         return request(app)
             .get(`/api/articles/1`)
             .expect(200)
