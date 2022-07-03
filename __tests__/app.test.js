@@ -227,7 +227,7 @@ describe(`GET /api/articles`, () => {
             .get(`/api/articles?p=cats`)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("Invalid pagination: 'p' and 'limit' queries must be numerical values");
+                expect(body.msg).toBe("Invalid request: 'p' and 'limit' queries must be numerical values");
             })
     })
     test(`status: 400, (refactored) returns an error message when passed an invalid 'limit' query`, () => {
@@ -235,7 +235,7 @@ describe(`GET /api/articles`, () => {
             .get(`/api/articles?p=2&limit=cats`)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("Invalid pagination: 'p' and 'limit' queries must be numerical values");
+                expect(body.msg).toBe("Invalid request: 'p' and 'limit' queries must be numerical values");
             })
     })
 });
@@ -328,6 +328,16 @@ describe(`GET /api/articles/:article_id/comments`, () => {
                 expect(body.msg).toBe(`No comments found`);
             });
     })
+    test(`status: 200, (refactored) accepts a 'p' query that specifies the page at which to start (determined by 'limit'), defaults to 1`, () => {
+        return request(app)
+            .get(`/api/articles/1/comments?p=2`)
+            .expect(200)
+            .then(({body}) => {
+                const { comments } = body;
+                expect(Array.isArray(comments)).toBe(true);
+                expect(comments.length).toBe(1);
+            })
+    })
     test(`status: 200, (refactored) accepts a 'limit' query which restricts the number of comments returned, defaults to 10`, () => {
         return request(app)
             .get(`/api/articles/1/comments?limit=5`)
@@ -338,14 +348,20 @@ describe(`GET /api/articles/:article_id/comments`, () => {
                 expect(comments.length).toBe(5);
             })
     })
-    test(`status: 200, (refactored) accepts a 'p' query that specifies the page at which to start (determined by 'limit'), defaults to 1`, () => {
+    test(`status: 400, (refactored) returns an error message when passed an invalid 'p' query`, () => {
         return request(app)
-            .get(`/api/articles/1/comments?p=2`)
-            .expect(200)
+            .get(`/api/articles/1/comments?p=cats`)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid request: 'p' and 'limit' queries must be numerical values");
+            })
+    })
+    test(`status: 400, (refactored) returns an error message when passed an invalid 'limit' query`, () => {
+        return request(app)
+            .get(`/api/articles/1/comments?limit=cats`)
+            .expect(400)
             .then(({body}) => {
-                const { comments } = body;
-                expect(Array.isArray(comments)).toBe(true);
-                expect(comments.length).toBe(1);
+                expect(body.msg).toBe("Invalid request: 'p' and 'limit' queries must be numerical values");
             })
     })
 })

@@ -54,7 +54,7 @@ exports.extractArticles = (queries) => {
 
     if ((Number.isNaN(parseInt(p))) || (Number.isNaN(parseInt(limit)))) {
         
-        return Promise.reject({ errStatus: 400, msg: `Invalid pagination: 'p' and 'limit' queries must be numerical values`})
+        return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values`})
     }
 
     queryString += `SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id `;
@@ -94,6 +94,11 @@ exports.extractArticleById = (article_id) => {
 
 exports.extractArticleCommentsById = (article_id, queries) => {
     const { p = 1, limit = 10 } = queries;
+
+    if ((Number.isNaN(parseInt(p))) || (Number.isNaN(parseInt(limit)))) {
+        
+        return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values`})
+    }
 
     return db.query(`SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1`, [article_id])
 
