@@ -178,7 +178,7 @@
     }
   },
   "DELETE /api/articles/:article_id": {
-    "description": "deletes the given article, returns an empty body",
+    "description": "deletes the specified article, returns an empty body",
     "queries": [],
     "exampleResponse": {}
   },
