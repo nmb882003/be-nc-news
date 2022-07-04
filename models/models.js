@@ -176,6 +176,17 @@ exports.updateCommentVotesById = (comment_id, body) => {
         });
 };
 
+exports.removeArticleById = (article_id) => {
+    return db.query(`DELETE from articles WHERE article_id = $1;`, [article_id])
+
+        .then(({ rowCount }) => {
+            if (!rowCount) {
+                return Promise.reject({ errStatus: 404, msg: "Article not found" });
+            }
+            
+        })
+}
+
 exports.removeCommentById = (comment_id) => {
     return db.query(`DELETE FROM comments WHERE comment_id = $1;`, [comment_id])
 

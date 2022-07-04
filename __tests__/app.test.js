@@ -75,7 +75,7 @@ describe('GET /api/users/:username', () => {
                 }))
             })
     })
-    test(`status: 404, responds with an error message when passed a username that doesn't exist`, () => {
+    test(`status: 404, responds with an error message when passed a valid username that doesn't exist`, () => {
         return request(app)
             .get('/api/users/buttery_fridge')
             .expect(404)
@@ -279,7 +279,7 @@ describe(`GET /api/articles/:article_id`, () => {
                 expect(body.msg).toBe('Invalid request');
             });
     });
-    test(`status: 404, responds with an error message when passed an article_id that doesn't exist`, () => {
+    test(`status: 404, responds with an error message when passed a valid article_id that doesn't exist`, () => {
         return request(app)
             .get(`/api/articles/333`)
             .expect(404)
@@ -320,7 +320,7 @@ describe(`GET /api/articles/:article_id/comments`, () => {
                 expect(body.msg).toBe(`Invalid request`);
             });
     });
-    test(`status: 404, responds with an error message when passed a valid endpoint where the resource doesn't exist`, () => {
+    test(`status: 404, responds with an error message when passed a valid article_id which doesn't exist`, () => {
         return request(app)
             .get(`/api/articles/333/comments`)
             .expect(404)
@@ -555,7 +555,7 @@ describe(`POST /api/articles/:article_id/comments`, () => {
                 expect(body.msg).toBe('Invalid request');
             })
     })
-    test(`status: 404, responds with an error message when passed a valid endpoint where the resource doesn't exist`, () => {
+    test(`status: 404, responds with an error message when passed a valid article_id that doesn't exist`, () => {
         return request(app)
             .post(`/api/articles/222/comments`)
             .send(validBody)
@@ -658,7 +658,7 @@ describe(`PATCH /api/articles/:article_id`, () => {
                 expect(body.msg).toBe('Invalid request');
             });
     });
-    test(`status: 404, responds with an error message when passed an article_id that doesn't exist`, () => {
+    test(`status: 404, responds with an error message when passed a valid article_id that doesn't exist`, () => {
         return request(app)
             .patch(`/api/articles/333`)
             .send(validBody)
@@ -739,7 +739,7 @@ describe(`PATCH /api/comments/:comment_id`, () => {
                 expect(body.msg).toBe("Invalid request")
             })
     })
-    test(`status: 404, responds with an error message when passed a parmetric endpoint which is valid but not known`, () => {
+    test(`status: 404, responds with an error message when passed a valid comment_id that doesn't exist`, () => {
         return request(app)
             .patch('/api/comments/666')
             .send(validBody)
@@ -750,8 +750,35 @@ describe(`PATCH /api/comments/:comment_id`, () => {
     })
 })
 
+describe(`DELETE /api/articles/:article_id`, () => {
+    test(`status: 204, deletes the given article and responds with no content`, () => {
+        return request(app)
+            .delete(`/api/articles/2`)
+            .expect(204)
+            .then(({ body }) => {
+                expect(body).toEqual({});
+            })
+    })
+    test(`status: 400, resonds with an error message when an invalid parametric endpoint is used`, () => {
+        return request(app)
+            .delete(`/api/articles/bananas`)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid request")
+            })
+    })
+    test(`status: 404, responds with an error message when passed a valid article_id that doesn't exist`, () => {
+        return request(app)
+            .delete(`/api/articles/666`)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Article not found")
+            })
+    })
+})
+
 describe(`DELETE /api/comments/:comment_id`, () => {
-    test(`status: 204, responds with no content`, () => {
+    test(`status: 204, deletes the given comment and responds with no content`, () => {
         return request(app)
             .delete(`/api/comments/7`)
             .expect(204)
@@ -767,7 +794,7 @@ describe(`DELETE /api/comments/:comment_id`, () => {
                 expect(body.msg).toEqual("Invalid request");
             })
     })
-    test(`status: 404, responds with an error when passed a comment_id that doesn't exist`, () => {
+    test(`status: 404, responds with an error when passed a valid comment_id that doesn't exist`, () => {
         return request(app)
             .delete(`/api/comments/333`)
             .expect(404)
