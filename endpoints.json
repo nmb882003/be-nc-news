@@ -131,6 +131,18 @@
       "comment_count": 0
     }
   },
+  "POST /api/topics": {
+    "description": "Adds a topic and serves up the posted topic",
+    "queries": [],
+    "exampleBody": {
+      "slug": "gaming",
+      "description": "PS4 and a whole lot more!" 
+    },
+    "exampleResponse": {
+      "slug": "gaming",
+      "description": "PS4 and a whole lot more!"
+    }
+  },
   "PATCH /api/articles/:article_id": {
     "description": "Adjusts the 'vote' property of the specified article by a set amount (can be negative) and serves up the updated article",
     "queries": [],

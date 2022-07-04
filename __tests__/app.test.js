@@ -332,7 +332,7 @@ describe(`GET /api/articles/:article_id/comments`, () => {
         return request(app)
             .get(`/api/articles/1/comments?p=2`)
             .expect(200)
-            .then(({body}) => {
+            .then(({ body }) => {
                 const { comments } = body;
                 expect(Array.isArray(comments)).toBe(true);
                 expect(comments.length).toBe(1);
@@ -360,7 +360,7 @@ describe(`GET /api/articles/:article_id/comments`, () => {
         return request(app)
             .get(`/api/articles/1/comments?limit=cats`)
             .expect(400)
-            .then(({body}) => {
+            .then(({ body }) => {
                 expect(body.msg).toBe("Invalid request: 'p' and 'limit' queries must be numerical values");
             })
     })
@@ -439,7 +439,7 @@ describe('POST /api/articles', () => {
             .send(invalidBody)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("Invalid request");
+                expect(body.msg).toBe("Invalid request: malformed body object");
             })
     })
 
@@ -449,7 +449,7 @@ describe('POST /api/articles', () => {
             .send(invalidBody2)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("Invalid request");
+                expect(body.msg).toBe("Invalid request: malformed body object");
             })
     })
 
@@ -507,7 +507,7 @@ describe(`POST /api/articles/:article_id/comments`, () => {
             .send(invalidBody)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe('Invalid request');
+                expect(body.msg).toBe('Invalid request: malformed body object');
             })
     })
     test(`status: 400, responds with an error when passed an object without a 'post' property`, () => {
@@ -516,7 +516,7 @@ describe(`POST /api/articles/:article_id/comments`, () => {
             .send(invalidBody2)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe('Invalid request');
+                expect(body.msg).toBe('Invalid request: malformed body object');
             })
     })
     test(`status: 400, responds with an error message when passed an object where the 'username' property is not a string`, () => {
@@ -525,7 +525,7 @@ describe(`POST /api/articles/:article_id/comments`, () => {
             .send(invalidBody3)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe('Invalid request');
+                expect(body.msg).toBe('Invalid request: malformed body object');
             })
     });
     test(`status: 400, responds with an error message when passed an object where the 'post' property is not a string`, () => {
@@ -534,7 +534,7 @@ describe(`POST /api/articles/:article_id/comments`, () => {
             .send(invalidBody4)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe('Invalid request');
+                expect(body.msg).toBe('Invalid request: malformed body object');
             })
     });
     test(`status: 400, responds with an error message when passed an object where the 'username' property is not an existing user`, () => {
@@ -562,6 +562,65 @@ describe(`POST /api/articles/:article_id/comments`, () => {
             .expect(404)
             .then(({ body }) => {
                 expect(body.msg).toBe('Article not found');
+            })
+    })
+})
+
+describe(`POST /api/topics`, () => {
+    const validBody = { slug: "gaming", description: "PS4 and a whole lot more!" };
+    const invalidBody1 = { description: "PS4 and a whole lot more!" };
+    const invalidBody2 = { slug: "gaming" };
+    const invalidBody3 = { slug: 384737249, description: "PS4 and a whole lot more!" };
+    const invalidBody4 = { slug: "gaming", description: 95743794783 };
+
+    test(`status: 201, responds with the posted topic object`, () => {
+        return request(app)
+            .post(`/api/topics`)
+            .send(validBody)
+            .expect(201)
+            .then(({ body }) => {
+                const { postedTopic } = body;
+                expect(postedTopic).toBeInstanceOf(Object);
+                expect(postedTopic).toEqual(expect.objectContaining({
+                    slug: validBody.slug,
+                    description: validBody.description
+                }));
+            })
+    })
+    test(`status: 400, responds with an error message when passed an object without a 'slug' property`, () => {
+        return request(app)
+            .post(`/api/topics`)
+            .send(invalidBody1)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid request: malformed body object");
+            })
+    })
+    test(`status: 400, responds with an error message when passed an object without a 'description' property`, () => {
+        return request(app)
+            .post(`/api/topics`)
+            .send(invalidBody2)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid request: malformed body object");
+            })
+    })
+    test(`status: 400, responds with an error message when passed an object where 'slug' is not a string`, () => {
+        return request(app)
+            .post(`/api/topics`)
+            .send(invalidBody3)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid request: malformed body object");
+            })
+    })
+    test(`status: 400, responds with an error message when passed an object where 'description' is not a string`, () => {
+        return request(app)
+            .post(`/api/topics`)
+            .send(invalidBody4)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe("Invalid request: malformed body object");
             })
     })
 })

@@ -1,4 +1,4 @@
-const { extractTopics, extractUsers, extractUserByUsername, extractArticles, extractArticleById, extractArticleCommentsById, extractEndpointData, insertArticle, insertArticleCommentById, updateArticleVotesById, updateCommentVotesById, removeCommentById } = require(`../models/models.js`);
+const { extractTopics, extractUsers, extractUserByUsername, extractArticles, extractArticleById, extractArticleCommentsById, extractEndpointData, insertArticle, insertArticleCommentById, insertTopic, updateArticleVotesById, updateCommentVotesById, removeCommentById } = require(`../models/models.js`);
 
 exports.getTopics = (req, res, next) => {
     extractTopics()
@@ -86,6 +86,16 @@ exports.postArticleCommentById = (req, res, next) => {
         .catch(next)
 };
 
+exports.postTopic = (req, res, next) => {
+    const { body } = req;
+
+    insertTopic(body)
+        .then(postedTopic => {
+            res.status(201).send({ postedTopic });
+        })
+        .catch(next)
+}
+
 exports.patchArticleVotesById = (req, res, next) => {
     const { article_id } = req.params;
     const { body } = req;
@@ -120,3 +130,4 @@ exports.deleteCommentById = (req, res, next) => {
         })
         .catch(next);
 };
+

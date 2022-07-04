@@ -15,7 +15,7 @@ exports.extractUsers = () => {
 exports.extractUserByUsername = (username) => {
     return db.query('SELECT * FROM users WHERE username = $1', [username])
 
-        .then(({rows}) => {
+        .then(({ rows }) => {
             if (rows.length) {
                 return rows[0];
             }
@@ -24,7 +24,7 @@ exports.extractUserByUsername = (username) => {
                     errStatus: 404,
                     msg: "User not found"
                 })
-            } 
+            }
         })
 }
 
@@ -53,8 +53,8 @@ exports.extractArticles = (queries) => {
     }
 
     if ((Number.isNaN(parseInt(p))) || (Number.isNaN(parseInt(limit)))) {
-        
-        return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values`})
+
+        return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values` })
     }
 
     queryString += `SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id `;
@@ -74,9 +74,9 @@ exports.extractArticles = (queries) => {
             }
             const modifiedRows = rows.map(article => {
                 delete article.body;
-                article.total_count = rows.length; 
+                article.total_count = rows.length;
                 return article;
-            }).slice((parseInt(p)-1) * parseInt(limit), parseInt(p) * parseInt(limit));
+            }).slice((parseInt(p) - 1) * parseInt(limit), parseInt(p) * parseInt(limit));
             return modifiedRows;
         });
 };
@@ -96,15 +96,15 @@ exports.extractArticleCommentsById = (article_id, queries) => {
     const { p = 1, limit = 10 } = queries;
 
     if ((Number.isNaN(parseInt(p))) || (Number.isNaN(parseInt(limit)))) {
-        
-        return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values`})
+
+        return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values` })
     }
 
     return db.query(`SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1`, [article_id])
 
         .then(({ rows }) => {
             if (rows.length) {
-                return rows.slice((parseInt(p)-1) * parseInt(limit), parseInt(p) * parseInt(limit));
+                return rows.slice((parseInt(p) - 1) * parseInt(limit), parseInt(p) * parseInt(limit));
             }
             else return Promise.reject({ errStatus: 404, msg: "No comments found" });
         });
@@ -120,14 +120,14 @@ exports.insertArticle = (bodyObj) => {
     const { author, title, body, topic } = bodyObj;
 
     if (typeof author !== "string" || typeof title !== "string" || typeof body !== "string" || typeof topic !== "string") {
-        return Promise.reject({ errStatus: 400, msg: "Invalid request"});
+        return Promise.reject({ errStatus: 400, msg: "Invalid request: malformed body object" });
     }
 
     const toBeInserted = [title, topic, author, body];
     const queryString = format(`INSERT INTO articles (title, topic, author, body) VALUES (%L) RETURNING *;`, toBeInserted);
 
     return db.query(queryString)
-        .then(({rows}) => {
+        .then(({ rows }) => {
             rows[0].comment_count = 0;
             return rows[0]
         })
@@ -136,13 +136,28 @@ exports.insertArticle = (bodyObj) => {
 exports.insertArticleCommentById = (article_id, body) => {
     const { post, username } = body;
 
-    if (typeof post !== "string" || typeof username !== "string") return Promise.reject({ errStatus: 400, msg: "Invalid request" });
+    if (typeof post !== "string" || typeof username !== "string") return Promise.reject({ errStatus: 400, msg: "Invalid request: malformed body object" });
 
     const toBeInserted = [post, article_id, username, 0, new Date()];
     const queryString = format(`INSERT INTO comments (body, article_id, author, votes, created_at) VALUES (%L) RETURNING *;`, toBeInserted);
 
     return db.query(queryString)
         .then(({ rows }) => rows[0])
+};
+
+exports.insertTopic = (body) => {
+    const { slug, description } = body;
+
+    if ((typeof slug !== "string") || (typeof description !== "string")) {
+        return Promise.reject({ errStatus: 400, msg: "Invalid request: malformed body object" });
+    }
+    const toBeInserted = [slug, description];
+    const queryString = format(`INSERT INTO topics (slug, description) VALUES (%L) RETURNING *;`, toBeInserted);
+
+    return db.query(queryString)
+        .then(({rows}) => {
+            return rows[0];
+        })
 };
 
 exports.updateArticleVotesById = (article_id, body) => {
@@ -156,8 +171,8 @@ exports.updateArticleVotesById = (article_id, body) => {
 exports.updateCommentVotesById = (comment_id, body) => {
     return db.query(`UPDATE comments SET votes = votes + $1 WHERE comment_id = $2 RETURNING *`, [body.inc_votes, comment_id])
         .then(({ rows }) => {
-           if (rows.length) return rows[0];
-           else return Promise.reject({ errStatus: 404, msg: "Comment not found" });
+            if (rows.length) return rows[0];
+            else return Promise.reject({ errStatus: 404, msg: "Comment not found" });
         });
 };
 
