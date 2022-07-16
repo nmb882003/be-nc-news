@@ -753,7 +753,7 @@ describe(`PATCH /api/comments/:comment_id`, () => {
 describe(`DELETE /api/articles/:article_id`, () => {
     test(`status: 204, deletes the given article and responds with no content`, () => {
         return request(app)
-            .delete(`/api/articles/2`)
+            .delete(`/api/articles/1`)
             .expect(204)
             .then(({ body }) => {
                 expect(body).toEqual({});

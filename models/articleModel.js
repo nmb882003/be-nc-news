@@ -1,32 +1,5 @@
 const db = require('../db/connection.js');
 const format = require("pg-format");
-const { readFile } = require("fs/promises");
-
-exports.extractTopics = () => {
-    return db.query(`SELECT * FROM topics;`)
-        .then(({ rows }) => rows);
-};
-
-exports.extractUsers = () => {
-    return db.query(`SELECT username FROM users`)
-        .then(({ rows }) => rows);
-};
-
-exports.extractUserByUsername = (username) => {
-    return db.query('SELECT * FROM users WHERE username = $1', [username])
-
-        .then(({ rows }) => {
-            if (rows.length) {
-                return rows[0];
-            }
-            else {
-                return Promise.reject({
-                    errStatus: 404,
-                    msg: "User not found"
-                })
-            }
-        })
-}
 
 exports.extractArticles = (queries) => {
     const { sorted_by = "created_at", order = "desc", topic = "", limit = 10, p = 1 } = queries;
@@ -110,12 +83,6 @@ exports.extractArticleCommentsById = (article_id, queries) => {
         });
 };
 
-exports.extractEndpointData = () => {
-    return readFile(`./endpoints.json`, `utf8`)
-
-        .then(fileData => JSON.parse(fileData));
-}
-
 exports.insertArticle = (bodyObj) => {
     const { author, title, body, topic } = bodyObj;
 
@@ -145,21 +112,6 @@ exports.insertArticleCommentById = (article_id, body) => {
         .then(({ rows }) => rows[0])
 };
 
-exports.insertTopic = (body) => {
-    const { slug, description } = body;
-
-    if ((typeof slug !== "string") || (typeof description !== "string")) {
-        return Promise.reject({ errStatus: 400, msg: "Invalid request: malformed body object" });
-    }
-    const toBeInserted = [slug, description];
-    const queryString = format(`INSERT INTO topics (slug, description) VALUES (%L) RETURNING *;`, toBeInserted);
-
-    return db.query(queryString)
-        .then(({rows}) => {
-            return rows[0];
-        })
-};
-
 exports.updateArticleVotesById = (article_id, body) => {
     return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`, [body.inc_votes, article_id])
         .then(({ rows }) => {
@@ -168,16 +120,8 @@ exports.updateArticleVotesById = (article_id, body) => {
         });
 };
 
-exports.updateCommentVotesById = (comment_id, body) => {
-    return db.query(`UPDATE comments SET votes = votes + $1 WHERE comment_id = $2 RETURNING *`, [body.inc_votes, comment_id])
-        .then(({ rows }) => {
-            if (rows.length) return rows[0];
-            else return Promise.reject({ errStatus: 404, msg: "Comment not found" });
-        });
-};
-
 exports.removeArticleById = (article_id) => {
-    return db.query(`DELETE FROM articles WHERE article_id = $1;`, [article_id])
+    return db.query(`DELETE FROM comments WHERE article_id = $1;`, [article_id])
 
         .then(({ rowCount }) => {
             if (!rowCount) {
@@ -185,13 +129,3 @@ exports.removeArticleById = (article_id) => {
             }
         })
 }
-
-exports.removeCommentById = (comment_id) => {
-    return db.query(`DELETE FROM comments WHERE comment_id = $1;`, [comment_id])
-
-        .then(({ rowCount }) => {
-            if (!rowCount) {
-                return Promise.reject({ errStatus: 404, msg: "Comment not found" });
-            }
-        })
-};

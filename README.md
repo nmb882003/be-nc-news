@@ -30,7 +30,7 @@ This will install all the dependencies required to run the project.
 ## Setup
 
 
-In order to create both test and development databases, you will first need to create two `.env` files in the root directory of the repository; save these as `.env-development` and `.env-test`.
+In order to create both test and development databases, you will first need to create two `.env` files in the root directory of the repository; save these as `.env.development` and `.env.test`.
 
 The files must contain the following information:
 

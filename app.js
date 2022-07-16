@@ -1,4 +1,4 @@
-const { getInvalidPath } = require(`./controllers/controllers.js`);
+const { getInvalidPath } = require('./controllers/invalidPathController.js');
 
 const express = require('express');
 const app = express();
