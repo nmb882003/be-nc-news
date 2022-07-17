@@ -122,6 +122,9 @@ exports.updateArticleVotesById = (article_id, body) => {
 
 exports.removeArticleById = (article_id) => {
     return db.query(`DELETE FROM comments WHERE article_id = $1;`, [article_id])
+        .then(({ rowCount }) => {
+            return db.query(`DELETE FROM articles WHERE article_id = $1;`, [article_id])
+        })
 
         .then(({ rowCount }) => {
             if (!rowCount) {
