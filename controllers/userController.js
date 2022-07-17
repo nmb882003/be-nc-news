@@ -1,4 +1,4 @@
-const { extractUsers, extractUserByUsername } = require(`../models/userModel.js`);
+const { extractUsers, extractUserByUsername } = require('../models/userModel.js');
 
 exports.getUsers = (req, res, next) => {
     extractUsers()

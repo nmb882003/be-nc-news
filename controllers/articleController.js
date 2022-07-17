@@ -1,4 +1,4 @@
-const { extractArticles, extractArticleById, extractArticleCommentsById, insertArticle, insertArticleCommentById, updateArticleVotesById, removeArticleById } = require(`../models/articleModel.js`);
+const { extractArticles, extractArticleById, extractArticleCommentsById, insertArticle, insertArticleCommentById, updateArticleVotesById, removeArticleById } = require('../models/articleModel.js');
 
 exports.getArticles = (req, res, next) => {
     const queries = req.query;
