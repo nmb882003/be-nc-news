@@ -100,20 +100,20 @@ exports.insertArticle = (bodyObj) => {
         })
 }
 
-exports.insertArticleCommentById = (article_id, body) => {
-    const { post, username } = body;
+exports.insertArticleCommentById = (article_id, bodyObj) => {
+    const { body, username } = bodyObj;
 
-    if (typeof post !== "string" || typeof username !== "string") return Promise.reject({ errStatus: 400, msg: "Invalid request: malformed body object" });
+    if (typeof body !== "string" || typeof username !== "string") return Promise.reject({ errStatus: 400, msg: "Invalid request: malformed body object" });
 
-    const toBeInserted = [post, article_id, username, 0, new Date()];
+    const toBeInserted = [body, article_id, username, 0, new Date()];
     const queryString = format(`INSERT INTO comments (body, article_id, author, votes, created_at) VALUES (%L) RETURNING *;`, toBeInserted);
 
     return db.query(queryString)
         .then(({ rows }) => rows[0])
 };
 
-exports.updateArticleVotesById = (article_id, body) => {
-    return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`, [body.inc_votes, article_id])
+exports.updateArticleVotesById = (article_id, bodyObj) => {
+    return db.query(`UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`, [bodyObj.inc_votes, article_id])
         .then(({ rows }) => {
             if (rows.length) return rows[0];
             else return Promise.reject({ errStatus: 404, msg: "Article not found" });
