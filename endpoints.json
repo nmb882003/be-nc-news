@@ -121,14 +121,16 @@
       "topic": "cars"
     },
     "exampleResponse": {
-      "author": "icellusedkars",
-      "title": "Who knew?",
-      "body": "More tea, vicar?",
-      "topic": "cars",
-      "article_id": 31,
-      "votes": 0,
-      "created_at": 1763123034579,
-      "comment_count": 0
+      "postedArticle": {
+        "author": "icellusedkars",
+        "title": "Who knew?",
+        "body": "More tea, vicar?",
+        "topic": "cars",
+        "article_id": 31,
+        "votes": 0,
+        "created_at": 1763123034579,
+        "comment_count": 0
+      }
     }
   },
   "POST /api/topics": {
@@ -136,11 +138,13 @@
     "queries": [],
     "exampleBody": {
       "slug": "gaming",
-      "description": "PS4 and a whole lot more!" 
+      "description": "PS4 and a whole lot more!"
     },
     "exampleResponse": {
-      "slug": "gaming",
-      "description": "PS4 and a whole lot more!"
+      "postedTopic": {
+        "slug": "gaming",
+        "description": "PS4 and a whole lot more!"
+      }
     }
   },
   "PATCH /api/articles/:article_id": {
@@ -169,12 +173,14 @@
       "inc_votes": -10
     },
     "exampleResponse": {
-      "comment_id": 45,
-      "body": "I've never seen anything like it. It really boggles the mind!",
-      "article_id": 12,
-      "author": "icellusedkars",
-      "votes": -10,
-      "created_at": 1763123000000 
+      "updatedComment": {
+        "comment_id": 45,
+        "body": "I've never seen anything like it. It really boggles the mind!",
+        "article_id": 12,
+        "author": "icellusedkars",
+        "votes": -10,
+        "created_at": 1763123000000
+      }
     }
   },
   "DELETE /api/articles/:article_id": {
