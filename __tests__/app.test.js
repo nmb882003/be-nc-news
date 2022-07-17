@@ -476,12 +476,12 @@ describe('POST /api/articles', () => {
 
 describe(`POST /api/articles/:article_id/comments`, () => {
 
-    const validBody = { username: "butter_bridge", post: "I'm outraged by this! It's political correctness gone mad, I tell you!" };
-    const invalidBody = { post: "Down with this kind of thing!!!" };
+    const validBody = { username: "butter_bridge", body: "I'm outraged by this! It's political correctness gone mad, I tell you!" };
+    const invalidBody = { body: "Down with this kind of thing!!!" };
     const invalidBody2 = { username: "butter_bridge", favourite_colour: "yellow" };
-    const invalidBody3 = { username: 616, post: "The sink is full of fishes, she's got dirty dishes on the brain" };
-    const invalidBody4 = { username: "butter_bridge", post: 8008569696969 };
-    const invalidBody5 = { username: "G.O.B.", post: "I've made a huge mistake" };
+    const invalidBody3 = { username: 616, body: "The sink is full of fishes, she's got dirty dishes on the brain" };
+    const invalidBody4 = { username: "butter_bridge", body: 8008569696969 };
+    const invalidBody5 = { username: "G.O.B.", body: "I've made a huge mistake" };
 
     test(`status: 201, responds with the posted comment object`, () => {
         return request(app)
@@ -493,7 +493,7 @@ describe(`POST /api/articles/:article_id/comments`, () => {
                 expect(postedComment).toBeInstanceOf(Object);
                 expect(postedComment).toEqual(expect.objectContaining({
                     comment_id: expect.any(Number),
-                    body: validBody.post,
+                    body: validBody.body,
                     article_id: 1,
                     author: validBody.username,
                     created_at: expect.any(String),
