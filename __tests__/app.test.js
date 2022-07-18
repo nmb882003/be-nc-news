@@ -227,7 +227,7 @@ describe(`GET /api/articles`, () => {
             .get(`/api/articles?p=cats`)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("Invalid request: 'p' and 'limit' queries must be numerical values");
+                expect(body.msg).toBe("Invalid request: 'p' and 'limit' queries must be integer numerical values");
             })
     })
     test(`status: 400, (refactored) returns an error message when passed an invalid 'limit' query`, () => {
@@ -235,7 +235,7 @@ describe(`GET /api/articles`, () => {
             .get(`/api/articles?p=2&limit=cats`)
             .expect(400)
             .then(({ body }) => {
-                expect(body.msg).toBe("Invalid request: 'p' and 'limit' queries must be numerical values");
+                expect(body.msg).toBe("Invalid request: 'p' and 'limit' queries must be integer numerical values");
             })
     })
 });

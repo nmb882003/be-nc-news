@@ -25,9 +25,9 @@ exports.extractArticles = (queries) => {
         return Promise.reject({ errStatus: 400, msg: `Invalid order query: should be either 'asc' or 'desc'` })
     }
 
-    if ((Number.isNaN(parseInt(p))) || (Number.isNaN(parseInt(limit)))) {
+    if ((!/^[\d]+$/.test(p)) || (!/^[\d]+$/.test(limit))) {
 
-        return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values` })
+        return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be integer numerical values` })
     }
 
     queryString += `SELECT articles.*, COUNT(comments.article_id) AS comment_count, COUNT(*) OVER () AS total_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id `;
