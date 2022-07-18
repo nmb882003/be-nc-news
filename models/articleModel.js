@@ -2,8 +2,9 @@ const db = require('../db/connection.js');
 const format = require("pg-format");
 
 exports.extractArticles = (queries) => {
-    const { sorted_by = "created_at", order = "desc", topic = "", limit = 10, p = 1 } = queries;
-    let queryString = "", queryValue = [];
+    const { sorted_by = "created_at", order = "desc", topic = "", limit = "10", p = "1" } = queries;
+    let countQueryString = "", queryString = "";
+    let queryValue = [];
 
     const checkTopicExists = (topicToCheck) => {
         return db.query(`SELECT * FROM topics WHERE slug = $1`, [topicToCheck])
@@ -18,37 +19,46 @@ exports.extractArticles = (queries) => {
             })
     }
 
+    countQueryString += `SELECT COUNT(*) FROM articles`;
+    queryString += `SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id`;
+
     if (!["article_id", "title", "topic", "author", "body", "created_at", "votes"].includes(sorted_by)) {
         return Promise.reject({ errStatus: 400, msg: `Invalid sort query: '${sorted_by}' should be a valid column name` })
     }
+
     if (!["asc", "desc"].includes(order)) {
         return Promise.reject({ errStatus: 400, msg: `Invalid order query: should be either 'asc' or 'desc'` })
     }
 
     if ((!/^[\d]+$/.test(p)) || (!/^[\d]+$/.test(limit))) {
-
         return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be integer numerical values` })
     }
 
-    queryString += `SELECT articles.*, COUNT(comments.article_id) AS comment_count, COUNT(*) OVER () AS total_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id `;
-
     if (topic !== "") {
-        queryString += `WHERE topic = $1 `;
+        countQueryString += ` WHERE topic = $1;`;
+        queryString += ` WHERE topic = $1 `;
         queryValue.push(topic);
     }
 
-    queryString += `GROUP BY articles.article_id ORDER BY ${sorted_by} ${order.toUpperCase()};`
+    queryString += ` GROUP BY articles.article_id ORDER BY ${sorted_by} ${order.toUpperCase()} OFFSET ${(parseInt(p) - 1) * parseInt(limit)} ROWS FETCH NEXT ${parseInt(limit)} ROWS ONLY;`;
 
-    return db.query(queryString, queryValue)
+    const countQueryPromise = db.query(countQueryString, queryValue);
+    const queryPromise = db.query(queryString, queryValue);
 
-        .then(({ rows }) => {
-            if (!rows.length) {
+    return Promise.all([countQueryPromise, queryPromise])
+
+        .then(([countQueryData, queryData]) => {
+            const { count } = countQueryData.rows[0];
+            const { rows } = queryData;
+
+            if (count === "0") {
                 return checkTopicExists(topic);
             }
             const modifiedRows = rows.map(article => {
+                article.total_count = count;
                 delete article.body;
                 return article;
-            }).slice((parseInt(p) - 1) * parseInt(limit), parseInt(p) * parseInt(limit));
+            });
             return modifiedRows;
         });
 };
@@ -67,8 +77,7 @@ exports.extractArticleById = (article_id) => {
 exports.extractArticleCommentsById = (article_id, queries) => {
     const { p = 1, limit = 10 } = queries;
 
-    if ((Number.isNaN(parseInt(p))) || (Number.isNaN(parseInt(limit)))) {
-
+    if ((!/^[\d]+$/.test(p)) || (!/^[\d]+$/.test(limit))) {
         return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values` })
     }
 
