@@ -108,9 +108,9 @@ describe(`GET /api/articles`, () => {
                 });
             })
     })
-    test(`status: 200, (refactored) accepts a 'sorted_by' query and responds with an array of article objects sorted by column (defaults to 'created_at')`, () => {
+    test(`status: 200, (refactored) accepts a 'sort_by' query and responds with an array of article objects sorted by column (defaults to 'created_at')`, () => {
         return request(app)
-            .get(`/api/articles?sorted_by=votes`)
+            .get(`/api/articles?sort_by=votes`)
             .expect(200)
             .then(({ body }) => {
                 const { articles } = body;
@@ -119,9 +119,9 @@ describe(`GET /api/articles`, () => {
                 expect(articles).toBeSortedBy(`votes`, { descending: true });
             })
     })
-    test(`status: 400, (refactored) responds with an error message when 'sorted_by' query is used with an invalid column name`, () => {
+    test(`status: 400, (refactored) responds with an error message when 'sort_by' query is used with an invalid column name`, () => {
         return request(app)
-            .get(`/api/articles?sorted_by=length`)
+            .get(`/api/articles?sort_by=length`)
             .expect(400)
             .then(({ body }) => {
                 expect(body.msg).toBe(`Invalid sort query: 'length' should be a valid column name`);
@@ -141,7 +141,7 @@ describe(`GET /api/articles`, () => {
     })
     test(`status: 200, (refactored) accepts multiple queries in order to return a sorted array of topics on a particular topic`, () => {
         return request(app)
-            .get(`/api/articles?sorted_by=author&order=asc&topic=mitch`)
+            .get(`/api/articles?sort_by=author&order=asc&topic=mitch`)
             .expect(200)
             .then(({ body }) => {
                 const { articles } = body;

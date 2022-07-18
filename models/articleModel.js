@@ -2,7 +2,7 @@ const db = require('../db/connection.js');
 const format = require("pg-format");
 
 exports.extractArticles = (queries) => {
-    const { sorted_by = "created_at", order = "desc", topic = "", limit = "10", p = "1" } = queries;
+    const { sort_by = "created_at", order = "desc", topic = "", limit = "10", p = "1" } = queries;
     let countQueryString = "", queryString = "";
     let queryValue = [];
 
@@ -22,8 +22,8 @@ exports.extractArticles = (queries) => {
     countQueryString += `SELECT COUNT(*) FROM articles`;
     queryString += `SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id`;
 
-    if (!["article_id", "title", "topic", "author", "body", "created_at", "votes"].includes(sorted_by)) {
-        return Promise.reject({ errStatus: 400, msg: `Invalid sort query: '${sorted_by}' should be a valid column name` })
+    if (!["article_id", "title", "topic", "author", "body", "created_at", "votes", "comment_count"].includes(sort_by)) {
+        return Promise.reject({ errStatus: 400, msg: `Invalid sort query: '${sort_by}' should be a valid column name` })
     }
 
     if (!["asc", "desc"].includes(order)) {
@@ -40,7 +40,7 @@ exports.extractArticles = (queries) => {
         queryValue.push(topic);
     }
 
-    queryString += ` GROUP BY articles.article_id ORDER BY ${sorted_by} ${order.toUpperCase()} OFFSET ${(parseInt(p) - 1) * parseInt(limit)} ROWS FETCH NEXT ${parseInt(limit)} ROWS ONLY;`;
+    queryString += ` GROUP BY articles.article_id ORDER BY ${sort_by} ${order.toUpperCase()} OFFSET ${(parseInt(p) - 1) * parseInt(limit)} ROWS FETCH NEXT ${parseInt(limit)} ROWS ONLY;`;
 
     const countQueryPromise = db.query(countQueryString, queryValue);
     const queryPromise = db.query(queryString, queryValue);
@@ -75,7 +75,7 @@ exports.extractArticleById = (article_id) => {
 };
 
 exports.extractArticleCommentsById = (article_id, queries) => {
-    const { p = 1, limit = 10 } = queries;
+    const { p = "1", limit = "10" } = queries;
 
     if ((!/^[\d]+$/.test(p)) || (!/^[\d]+$/.test(limit))) {
         return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values` })
