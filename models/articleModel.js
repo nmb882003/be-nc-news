@@ -92,7 +92,7 @@ exports.extractArticleCommentsById = (article_id, queries) => {
             const { rows } = queryData;
 
             if (count === "0") {
-                return Promise.reject({ errStatus: 404, msg: "No comments found" });
+                return Promise.reject({ errStatus: 404, msg: "No comments found for this article" });
             }
             return rows;
         });

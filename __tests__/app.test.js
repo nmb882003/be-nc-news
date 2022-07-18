@@ -325,7 +325,7 @@ describe(`GET /api/articles/:article_id/comments`, () => {
             .get(`/api/articles/333/comments`)
             .expect(404)
             .then(({ body }) => {
-                expect(body.msg).toBe(`No comments found`);
+                expect(body.msg).toBe(`No comments found for this article`);
             });
     })
     test(`status: 200, (refactored) accepts a 'p' query that specifies the page at which to start (determined by 'limit'), defaults to 1`, () => {
