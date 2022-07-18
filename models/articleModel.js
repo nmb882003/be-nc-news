@@ -30,7 +30,7 @@ exports.extractArticles = (queries) => {
         return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values` })
     }
 
-    queryString += `SELECT articles.*, COUNT(comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id `;
+    queryString += `SELECT articles.*, COUNT(comments.article_id) AS comment_count, COUNT(*) OVER () AS total_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id `;
 
     if (topic !== "") {
         queryString += `WHERE topic = $1 `;
@@ -47,7 +47,6 @@ exports.extractArticles = (queries) => {
             }
             const modifiedRows = rows.map(article => {
                 delete article.body;
-                article.total_count = rows.length;
                 return article;
             }).slice((parseInt(p) - 1) * parseInt(limit), parseInt(p) * parseInt(limit));
             return modifiedRows;

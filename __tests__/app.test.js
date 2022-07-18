@@ -197,7 +197,7 @@ describe(`GET /api/articles`, () => {
 
                 articles.forEach(article => {
                     expect(article).toEqual(expect.objectContaining({
-                        total_count: expect.any(Number)
+                        total_count: expect.any(String)
                     }));
                 });
             })
