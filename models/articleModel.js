@@ -81,13 +81,20 @@ exports.extractArticleCommentsById = (article_id, queries) => {
         return Promise.reject({ errStatus: 400, msg: `Invalid request: 'p' and 'limit' queries must be numerical values` })
     }
 
-    return db.query(`SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1`, [article_id])
+    const countQueryPromise = db.query(`SELECT COUNT(*) FROM comments WHERE article_id = $1`, [article_id]);
 
-        .then(({ rows }) => {
-            if (rows.length) {
-                return rows.slice((parseInt(p) - 1) * parseInt(limit), parseInt(p) * parseInt(limit));
+    const queryPromise = db.query(`SELECT comment_id, votes, created_at, author, body FROM comments WHERE article_id = $1 OFFSET ${(parseInt(p) - 1) * parseInt(limit)} ROWS FETCH NEXT ${parseInt(limit)} ROWS ONLY;`, [article_id]);
+
+    return Promise.all([countQueryPromise, queryPromise])
+
+        .then(([countQueryData, queryData]) => {
+            const { count } = countQueryData.rows[0];
+            const { rows } = queryData;
+
+            if (count === "0") {
+                return Promise.reject({ errStatus: 404, msg: "No comments found" });
             }
-            else return Promise.reject({ errStatus: 404, msg: "No comments found" });
+            return rows;
         });
 };
 
