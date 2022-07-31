@@ -52,8 +52,8 @@
           "title": "Is the trusty red Corsa making a comeback?",
           "topic": "cars",
           "author": "aboynamedsue",
-          "created_at": 1527695953341,
-          "votes": 4,
+          "created_at": "2020-07-09T21:14:00.000Z",
+          "votes": 34,
           "comment_count": 13
         }
       ]
@@ -69,7 +69,7 @@
         "topic": "cars",
         "author": "aboynamedsue",
         "body": "Text from the article",
-        "created_at": 1527695953341,
+        "created_at": "2020-07-09T21:14:00.000Z",
         "votes": 34,
         "comment_count": 13
       }
@@ -86,7 +86,7 @@
         {
           "comment_id": 32,
           "votes": -4,
-          "created_at": 1583133000000,
+          "created_at": "2020-05-09T21:14:00.000Z",
           "author": "icellusedkars",
           "body": "Is this someone's idea of a joke? It's political correctness gone mad, I tell you!"
         }
@@ -107,7 +107,7 @@
         "article_id": 12,
         "author": "icellusedkars",
         "votes": 0,
-        "created_at": 1763123000000
+        "created_at": "2022-07-30T21:14:00.000Z"
       }
     }
   },
@@ -128,7 +128,7 @@
         "topic": "cars",
         "article_id": 31,
         "votes": 0,
-        "created_at": 1763123034579,
+        "created_at": "2022-07-30T21:14:00.000Z",
         "comment_count": 0
       }
     }
@@ -160,7 +160,7 @@
         "topic": "cars",
         "author": "aboynamedsue",
         "body": "Text from the article",
-        "created_at": 1527695953341,
+        "created_at": "2020-07-09T21:14:00.000Z",
         "votes": 33,
         "comment_count": 13
       }
@@ -179,7 +179,7 @@
         "article_id": 12,
         "author": "icellusedkars",
         "votes": -10,
-        "created_at": 1763123000000
+        "created_at": "2022-07-30T21:14:00.000Z"
       }
     }
   },
