@@ -428,7 +428,7 @@ describe('POST /api/articles', () => {
                     article_id: expect.any(Number),
                     votes: expect.any(Number),
                     created_at: expect.any(String),
-                    comment_count: expect.any(Number)
+                    comment_count: expect.any(String)
                 }))
             })
     })

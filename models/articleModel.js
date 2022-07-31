@@ -110,7 +110,7 @@ exports.insertArticle = (bodyObj) => {
 
     return db.query(queryString)
         .then(({ rows }) => {
-            rows[0].comment_count = 0;
+            rows[0].comment_count = "0";
             return rows[0]
         })
 }
